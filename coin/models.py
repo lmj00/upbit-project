@@ -3,6 +3,8 @@ from django.db import models
 
 class Ticker(models.Model):
     market = models.CharField(max_length=10)
+    korean_name = models.CharField(blank=True, max_length=20)
+    english_name = models.CharField(blank=True, max_length=30)
     trade_date = models.CharField(max_length=8)
     trade_time = models.CharField(max_length=6)
     trade_date_kst = models.CharField(max_length=8)
