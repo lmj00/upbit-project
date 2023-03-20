@@ -6,5 +6,6 @@ class CoinConfig(AppConfig):
     name = 'coin'
     
     def ready(self):
-        from . import scheduler
-        scheduler.start()
+        from coin.price import get_ticker
+        import asyncio
+        asyncio.run(get_ticker())
