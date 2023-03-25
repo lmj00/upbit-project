@@ -70,3 +70,16 @@ async def get_ticker():
                 market_state = recv_obj['market_state'],
                 timestamp = recv_obj['timestamp']
             )
+
+
+            
+def get_top_trade_price_coin():
+    length = len(get_market()) 
+    ticker_list = Ticker.objects.order_by('-id')[:length]
+    coin_list = []
+
+    for ticker in ticker_list:
+        if ticker.acc_trade_price_24h >= 100_000_000_000:
+            coin_list.append(ticker)
+
+    return coin_list
