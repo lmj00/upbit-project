@@ -1,7 +1,9 @@
-from .models import Ticker
-import requests
+from coin.models import Ticker
+
 import websockets
-import json
+import json 
+import requests
+import json 
 
 
 def get_market():
@@ -31,9 +33,11 @@ async def get_ticker():
                 "codes": get_market()
             }
         ]
-        
-        while True:  
-            await websocket.send(json.dumps(request_ticker))
+
+        await websocket.send(json.dumps(request_ticker))
+
+        for _ in range(len(get_market())):
+
             recv = await websocket.recv()
             recv_obj = json.loads(recv)
             
