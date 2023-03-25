@@ -16,6 +16,7 @@ class Ticker(models.Model):
     acc_trade_volume = models.FloatField()	 
     acc_trade_volume_24h = models.FloatField()	  
     acc_trade_price = models.FloatField()	 
+    acc_trade_price_24h	= models.FloatField(null=True)
     trade_date = models.CharField(max_length=8)	 
     trade_time = models.CharField(max_length=6)	 
     trade_timestamp = models.IntegerField()

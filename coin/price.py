@@ -56,6 +56,7 @@ async def get_ticker():
                 acc_trade_volume = recv_obj['acc_trade_volume'],
                 acc_trade_volume_24h = recv_obj['acc_trade_volume_24h'],
                 acc_trade_price = recv_obj['acc_trade_price'],
+                acc_trade_price_24h	= recv_obj['acc_trade_price_24h'],
                 trade_date = recv_obj['trade_date'],
                 trade_time = recv_obj['trade_time'],
                 trade_timestamp = recv_obj['trade_timestamp'],
