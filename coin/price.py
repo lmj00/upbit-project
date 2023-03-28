@@ -72,7 +72,6 @@ async def get_ticker():
             )
 
 
-            
 def get_top_trade_price_coin():
     length = len(get_market()) 
     ticker_list = Ticker.objects.order_by('-id')[:length]
@@ -83,3 +82,14 @@ def get_top_trade_price_coin():
             coin_list.append(ticker)
 
     return coin_list
+
+
+def get_top_trade_volume_coin():
+    dic = {}
+
+    for coin in get_top_trade_price_coin():
+        dic[coin] = coin.trade_volume
+
+    top_trade_volume_coin = max(dic, key=dic.get)
+
+    return top_trade_volume_coin
