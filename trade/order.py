@@ -1,16 +1,17 @@
+from urllib.parse import urlencode, unquote
+from coin.price import get_top_trade_volume_coin
 import jwt
 import hashlib
 import os
 import requests
 import uuid
-from urllib.parse import urlencode, unquote
 
 access_key = ''
 secret_key = ''
 server_url = 'https://api.upbit.com'
 
 
-def get_krw_check():
+def get_krw():
     params = {
         
     }
@@ -28,7 +29,4 @@ def get_krw_check():
 
     res = requests.get(server_url + '/v1/accounts', params=params, headers=headers).json()
 
-    if float(res[0]['balance']) >= 5002.5:
-        return True
-    
-    return False
+    return float(res[0]['balance'])
