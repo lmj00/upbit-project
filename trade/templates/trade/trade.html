@@ -1,0 +1,5 @@
+<form method="POST" action="{% url 'trade' %}">
+    {% csrf_token %}
+    <button type="submit">거래 시작</button>
+</form>
+{{ max_volume_coin.code }}
