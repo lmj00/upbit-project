@@ -9,7 +9,12 @@ def trade(request):
         if request.method == 'POST':
             if get_krw() >= 5002.5:
                 order_bid()
-
+            else:
+                messages.add_message(
+                    request, 
+                    messages.INFO, 
+                    '주문가능 금액이 부족합니다.'
+                )                                
     except:
         messages.add_message(
             request, 
