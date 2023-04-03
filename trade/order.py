@@ -96,9 +96,9 @@ def get_last_order_value():
     return res[0]
 
 
-def order_cancel(uuid):
+def order_cancel(order_uuid):
     params = {
-    'uuid': uuid
+    'uuid': order_uuid
     }
 
     query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
