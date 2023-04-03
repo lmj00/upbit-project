@@ -67,9 +67,9 @@ def order_bid():
     res.json()
 
 
-def get_last_order_value():
+def get_wait_order_value():
     params = {
-    'states[]': ['done', 'cancel']
+    'states[]': ['wait']
     }
 
     query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
@@ -93,7 +93,7 @@ def get_last_order_value():
 
     res = requests.get(server_url + '/v1/orders', params=params, headers=headers).json()
 
-    return res[0]
+    return res
 
 
 def order_cancel(order_uuid):
