@@ -63,8 +63,10 @@ def order_bid():
     'Authorization': authorization, 
     }
 
-    res = requests.post(server_url + '/v1/orders', json=params, headers=headers)
-    res.json()
+    res = requests.post(server_url + '/v1/orders', json=params, headers=headers).json()
+
+    if len(get_wait_order_value()) > 0 and res['uuid'] == get_wait_order_value()[0]['uuid']:
+        order_cancel(res['uuid'])
 
 
 def get_wait_order_value():
