@@ -93,3 +93,13 @@ def get_top_trade_volume_coin():
     top_trade_volume_coin = max(dic, key=dic.get)
 
     return top_trade_volume_coin
+
+
+def get_coin_snapshot(code):
+    url = "https://api.upbit.com/v1/ticker?markets=" + code
+
+    headers = {"accept": "application/json"}
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()[0]
