@@ -1,5 +1,5 @@
 from urllib.parse import urlencode, unquote
-from coin.price import get_top_trade_volume_coin
+from coin.price import get_top_trade_volume_coin, get_coin_snapshot
 
 import jwt
 import hashlib
@@ -67,6 +67,15 @@ def order_bid():
 
     if len(get_wait_order_value()) > 0 and res['uuid'] == get_wait_order_value()[0]['uuid']:
         order_cancel(res['uuid'])
+
+
+def order_ask():
+    gcov = get_complete_order_value()
+    gcov_price = float(gcov['price'])
+
+    rate_of_return = (get_coin_snapshot(gcov['market'])['trade_price'] - gcov_price) / gcov_price * 100
+
+    return rate_of_return
 
 
 def get_wait_order_value():
