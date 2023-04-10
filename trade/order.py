@@ -6,6 +6,7 @@ import hashlib
 import os
 import requests
 import uuid
+import time
 
 access_key = ''
 secret_key = ''
@@ -67,15 +68,51 @@ def order_bid():
 
     if len(get_wait_order_value()) > 0 and res['uuid'] == get_wait_order_value()[0]['uuid']:
         order_cancel(res['uuid'])
+    else:
+        order_ask()
 
 
 def order_ask():
-    gcov = get_complete_order_value()
-    gcov_price = float(gcov['price'])
+    while True:
+        gcov = get_complete_order_value()
+        gcov_price = float(gcov['price'])
 
-    rate_of_return = (get_coin_snapshot(gcov['market'])['trade_price'] - gcov_price) / gcov_price * 100
+        gcs = get_coin_snapshot(gcov['market'])
+        rate_of_return = (gcs['trade_price'] - gcov_price) / gcov_price * 100
+        
+        if rate_of_return >= 1:
+            params = {
+                'market': gcs['market'],
+                'side': 'ask',
+                'ord_type': 'limit',
+                'price': gcs['trade_price'],
+                'volume': gcs['executed_volume'] - gcs['executed_volume'] * 0.0005  
+            }
 
-    return rate_of_return
+            query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
+
+            m = hashlib.sha512()
+            m.update(query_string)
+            query_hash = m.hexdigest()
+
+            payload = {
+                'access_key': access_key,
+                'nonce': str(uuid.uuid4()),
+                'query_hash': query_hash,
+                'query_hash_alg': 'SHA512',
+            }
+
+            jwt_token = jwt.encode(payload, secret_key)
+            authorization = 'Bearer {}'.format(jwt_token)
+            headers = {
+            'Authorization': authorization,
+            }
+
+            res = requests.post(server_url + '/v1/orders', json=params, headers=headers).json()
+
+            return res
+
+        time.sleep(0.01)
 
 
 def get_wait_order_value():
