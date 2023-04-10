@@ -109,7 +109,7 @@ def get_wait_order_value():
 
 def get_complete_order_value():
     params = {
-    'states[]': ['done', 'cancel']
+    'states[]': ['done']
     }
 
     query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
