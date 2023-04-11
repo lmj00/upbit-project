@@ -78,7 +78,7 @@ def order_ask():
         gcov_price = float(gcov['price'])
 
         gcs = get_coin_snapshot(gcov['market'])
-        rate_of_return = (gcs['trade_price'] - gcov_price) / gcov_price * 100
+        rate_of_return = round((gcs['trade_price'] - gcov_price) / gcov_price * 100, 2)
         
         if rate_of_return >= 1:
             params = {
