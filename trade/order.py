@@ -1,5 +1,9 @@
 from urllib.parse import urlencode, unquote
-from coin.price import get_top_trade_volume_coin, get_coin_snapshot
+from coin.price import (
+    get_top_trade_volume_coin, 
+    get_coin_snapshot, 
+    get_market
+)
 
 import jwt
 import hashlib
@@ -31,9 +35,20 @@ class AccountCheck:
 
     def get_krw(self):
         return float(self.res[0]['balance'])
-
+    
     def get_coins(self):
-        return self.res[1:]
+        market = get_market()
+        coins = self.res[1:]
+        coin_list = []
+
+        # 거래 미지원 코인 제외
+        for coin in coins:  
+            currency = coin['unit_currency'] + '-' + coin['currency']
+
+            if currency in market:
+                coin_list.append(currency)
+        
+        return coin_list
 
 
 def order_bid():
