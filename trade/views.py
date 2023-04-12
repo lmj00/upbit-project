@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render
 from coin.price import get_top_trade_volume_coin
-from trade.order import get_krw, order_bid
+from trade.order import AccountCheck, order_bid
 
 
 def trade(request):
     try: 
         if request.method == 'POST':
-            if get_krw() >= 5002.5:
+            if AccountCheck().get_krw() >= 5002.5:
                 order_bid()
             else:
                 messages.add_message(
