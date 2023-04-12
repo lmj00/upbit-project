@@ -32,6 +32,9 @@ class AccountCheck:
     def get_krw(self):
         return float(self.res[0]['balance'])
 
+    def get_coins(self):
+        return self.res[1:]
+
 
 def order_bid():
     coin = get_top_trade_volume_coin()
