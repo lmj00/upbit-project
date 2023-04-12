@@ -13,10 +13,8 @@ secret_key = ''
 server_url = 'https://api.upbit.com'
 
 
-def get_krw():
-    params = {
-        
-    }
+class AccountCheck:
+    params = {}
 
     payload = {
         'access_key': access_key,
@@ -31,18 +29,21 @@ def get_krw():
 
     res = requests.get(server_url + '/v1/accounts', params=params, headers=headers).json()
 
-    return float(res[0]['balance'])
+    def get_krw(self):
+        return float(self.res[0]['balance'])
 
 
 def order_bid():
     coin = get_top_trade_volume_coin()
+    ac = AccountCheck()
 
     params = {
         'market': coin.code,
         'side': 'bid',
         'ord_type': 'limit',
         'price': coin.trade_price,
-        'volume': (get_krw() - get_krw() * 0.0005) / coin.trade_price
+        'volume': (ac.get_krw() - ac.get_krw() * 0.0005) / coin.trade_price
+
     }
 
     query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
