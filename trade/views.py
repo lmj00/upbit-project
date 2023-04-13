@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render
-from coin.price import get_top_trade_volume_coin
-from trade.order import AccountCheck, order_bid
+from coin.coin import get_top_trade_volume_coin
+from order.order import order_bid
+from trade.trade import AccountCheck
 
 
 def trade(request):
