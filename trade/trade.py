@@ -1,4 +1,5 @@
 from urllib.parse import urlencode, unquote
+from api_key import access_key, secret_key, server_url
 from coin.coin import (
     get_market
 )
@@ -10,9 +11,6 @@ import requests
 import uuid
 import time
 
-access_key = ''
-secret_key = ''
-server_url = 'https://api.upbit.com'
 
 class AccountCheck:
     params = {}

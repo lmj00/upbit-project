@@ -1,4 +1,5 @@
 from urllib.parse import urlencode, unquote
+from api_key import access_key, secret_key, server_url
 
 import jwt
 import hashlib
@@ -6,10 +7,6 @@ import os
 import requests
 import uuid
 import time
-
-access_key = ''
-secret_key = ''
-server_url = 'https://api.upbit.com'
 
 
 def get_wait_order_value():

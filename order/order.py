@@ -1,4 +1,5 @@
 from urllib.parse import urlencode, unquote
+from api_key import access_key, secret_key, server_url
 from coin.coin import (
     get_top_trade_volume_coin, 
     get_coin_snapshot, 
@@ -12,10 +13,6 @@ import os
 import requests
 import uuid
 import time
-
-access_key = ''
-secret_key = ''
-server_url = 'https://api.upbit.com'
 
 
 def order_bid():
