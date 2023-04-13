@@ -1,5 +1,5 @@
 from background_task import background
-from .price import get_ticker
+from .coin import get_ticker
 from datetime import datetime
 
 import asyncio
