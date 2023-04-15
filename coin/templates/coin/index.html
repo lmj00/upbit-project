@@ -1,0 +1,40 @@
+<body>
+    <div id="market_list"></div>
+    <script>
+        const socket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/coin/'
+            + 'coin'
+            + '/'
+        ); 
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data)['coin_dic'];
+
+            var group_check = document.getElementById('group');
+
+            if (!group_check) {
+                var group = document.createElement('div');
+                group.setAttribute('id', 'group')
+
+                for(key in data) {           
+                    market = document.createElement('div');
+                    market.setAttribute('class', 'code');
+                    market.innerText = key + ' ' + data[key];                
+
+                    group.appendChild(market);
+                    market_list.appendChild(group);
+                };
+            } else {
+                var i = 0;
+                for(key in data) {   
+                    var market = document.getElementsByClassName('code');
+                    market[i].innerHTML = key + ' ' + data[key];                
+                    i++;
+                };
+            }
+            
+        };
+
+</script>
+</body>
