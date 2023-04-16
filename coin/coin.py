@@ -83,7 +83,9 @@ def get_top_trade_price_coin():
     for ticker in ticker_list:
         if ticker.acc_trade_price_24h >= 100_000_000_000:
             coin_list.append(ticker)
-
+    
+    coin_list.sort(key=lambda x: x.acc_trade_price_24h, reverse=True)
+    
     return coin_list
 
 
