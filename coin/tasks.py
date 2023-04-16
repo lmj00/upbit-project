@@ -4,7 +4,7 @@ from datetime import datetime
 
 import asyncio
 
+
 @background(schedule=datetime.now())
 def background_ticker():
-    while True:
-        asyncio.run(get_ticker())
+    asyncio.run(get_ticker())
