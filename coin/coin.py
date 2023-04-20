@@ -37,11 +37,12 @@ async def get_ticker():
             ]
 
             await websocket.send(json.dumps(request_ticker))
+            await websocket.ping()
         
             for _ in range(len(get_market())):
                 recv = await websocket.recv()
                 recv_obj = json.loads(recv)
-                
+
                 Ticker.objects.create(
                     type = recv_obj['type'],
                     code = recv_obj['code'],
@@ -72,7 +73,6 @@ async def get_ticker():
                     timestamp = recv_obj['timestamp']
             )
 
-            time.sleep(1)
 
 
 def get_top_trade_price_coin():
