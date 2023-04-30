@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'coin',
     'order',
     'trade',
+    'simulated_trade',
     'background_task'
 ]
 
