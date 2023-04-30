@@ -9,8 +9,7 @@
             + '/'
         ); 
         socket.onmessage = function(e) {
-            const data = JSON.parse(e.data)['coin_dic'];
-
+            const data = JSON.parse(e.data);
             var group_check = document.getElementById('group');
 
             if (!group_check) {
@@ -33,7 +32,7 @@
                     i++;
                 };
             }
-            
+
         };
 
 </script>

@@ -24,7 +24,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
             
-            await self.send(text_data=json.dumps({"coin_dic": coin_dic}))
+            await self.send(text_data=json.dumps(coin_dic))
+
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
