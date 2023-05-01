@@ -14,6 +14,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
 import coin.routing
+import simulated_trade.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'upbit_project.settings')
 # Initialize Django ASGI application early to ensure the AppRegistry
@@ -25,7 +26,12 @@ application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(coin.routing.websocket_urlpatterns))
+            AuthMiddlewareStack(
+                URLRouter(
+                    coin.routing.websocket_urlpatterns +
+                    simulated_trade.routing.websocket_urlpatterns
+                )
+            ),
         ),
     }
 )
