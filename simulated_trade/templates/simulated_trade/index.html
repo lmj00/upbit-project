@@ -1,0 +1,40 @@
+<body>
+    <div id="market_list"></div>
+    <script>
+        const socket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/sml_trade/'
+            + 'sml_trade'
+            + '/'
+        );    
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            
+            var group_check = document.getElementById('group');
+
+            if (!group_check) {
+                var group = document.createElement('div');
+                group.setAttribute('id', 'group')
+
+                for(key in data) {           
+                    market = document.createElement('div');
+                    market.setAttribute('class', 'code');
+                    market.innerText = data[key].code + ' ' + data[key].trade_price;                
+
+                    group.appendChild(market);
+                    market_list.appendChild(group);
+                };
+            } else {
+                var i = 0;
+                for(key in data) {   
+                    var market = document.getElementsByClassName('code');
+                    market[i].innerHTML = data[key].code + ' ' + data[key].trade_price;                
+                    i++;
+                };
+            }
+        };
+
+</script>
+</body>
