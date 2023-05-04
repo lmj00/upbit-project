@@ -26,6 +26,18 @@ def get_krw_market_codes():
     return krw_codes
 
 
+def get_krw_market_list():
+    market_list = []
+
+    for res in response.json():
+        market = res['market']
+        
+        if market[:3] == 'KRW':
+            market_list.append(res)
+
+    return market_list
+
+
 async def get_ticker():
     while True:
         async with websockets.connect('wss://api.upbit.com/websocket/v1') as websocket:
