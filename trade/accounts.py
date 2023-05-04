@@ -1,6 +1,6 @@
 from urllib.parse import urlencode, unquote
 from api_key import access_key, secret_key, server_url
-from coin.coin import get_market
+from coin.coin import get_krw_market_codes
 
 import jwt
 import hashlib
@@ -26,12 +26,12 @@ headers = {
 res = requests.get(server_url + '/v1/accounts', params=params, headers=headers).json()
 
 
-def get_krw(self):
+def get_krw():
     return float(res[0]['balance'])
 
 
 def get_coins():
-    market = get_market()
+    market = get_krw_market_codes()
     coins = res[1:]
     coin_list = []
 

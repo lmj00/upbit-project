@@ -7,22 +7,23 @@ import json
 import time
 
 
-def get_market():
-    url = "https://api.upbit.com/v1/market/all?isDetails=false"
+url = "https://api.upbit.com/v1/market/all?isDetails=false"
 
-    headers = {"accept": "application/json"}
+headers = {"accept": "application/json"}
 
-    response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers)
 
-    market_list = []
+
+def get_krw_market_codes():
+    krw_codes = []
 
     for res in response.json():
         market = res['market']
         
         if market[:3] == 'KRW':
-            market_list.append(market)
+            krw_codes.append(market)
 
-    return market_list
+    return krw_codes
 
 
 async def get_ticker():
@@ -32,14 +33,14 @@ async def get_ticker():
                 {"ticket":"ticket"},
                 {
                     "type":"ticker",
-                    "codes": get_market()
+                    "codes": get_krw_market_codes()
                 }
             ]
 
             await websocket.send(json.dumps(request_ticker))
             await websocket.ping()
         
-            for _ in range(len(get_market())):
+            for _ in range(len(get_krw_market_codes())):
                 recv = await websocket.recv()
                 recv_obj = json.loads(recv)
 
@@ -76,7 +77,7 @@ async def get_ticker():
 
 
 def get_top_trade_price_coin():
-    length = len(get_market()) 
+    length = len(get_krw_market_codes()) 
     ticker_list = Ticker.objects.order_by('-id')[:length]
     coin_list = []
 
