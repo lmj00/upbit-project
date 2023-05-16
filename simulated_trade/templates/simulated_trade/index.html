@@ -2,16 +2,11 @@
     <div id="market_list"></div>
     <script>
         const socket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/sml_trade/'
-            + 'sml_trade'
-            + '/'
+            'ws://' + window.location.host + '/ws/sml_trade/'
         );    
 
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            
             var group_check = document.getElementById('group');
 
             if (!group_check) {
@@ -35,6 +30,5 @@
                 };
             }
         };
-
 </script>
 </body>
