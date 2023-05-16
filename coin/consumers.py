@@ -2,15 +2,24 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .coin import get_top_trade_price_coin
 
 import json
+import asyncio
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class CoinConsumer(AsyncWebsocketConsumer):
+    room_group_name = 'coin_group'
+
     async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["coin"]
-        self.room_group_name = "coin_%s" % self.room_name
-
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+        await self.send_ticker()
 
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name, self.channel_name
+        )
+
+
+    async def send_ticker(self):
         while True:
             coin_dic = {}
     
@@ -26,7 +35,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
             
             await self.send(text_data=json.dumps(coin_dic))
 
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name, self.channel_name
-        )
+            await asyncio.sleep(1)  
