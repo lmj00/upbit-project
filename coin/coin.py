@@ -26,6 +26,18 @@ def get_krw_codes_list():
     return krw_codes
 
 
+def get_kr_name_dic():
+    kr_name_dic = {}
+
+    for res in response.json():
+        market = res['market']
+        
+        if market[:3] == 'KRW':
+            kr_name_dic[market] = res['korean_name']
+
+    return kr_name_dic
+
+
 async def get_ticker():
     while True:
         async with websockets.connect('wss://api.upbit.com/websocket/v1') as websocket:
@@ -39,14 +51,20 @@ async def get_ticker():
 
             await websocket.send(json.dumps(request_ticker))
             await websocket.ping()
-        
+
+            kr_name_dic = get_kr_name_dic()
+
             for _ in range(len(get_krw_codes_list())):
                 recv = await websocket.recv()
                 recv_obj = json.loads(recv)
 
+                code = recv_obj['code']
+                name = kr_name_dic.get(code)
+
                 Ticker.objects.create(
                     type = recv_obj['type'],
-                    code = recv_obj['code'],
+                    code = code,
+                    name = name,
                     opening_price = recv_obj['opening_price'],
                     high_price = recv_obj['high_price'],
                     low_price = recv_obj['low_price'],
