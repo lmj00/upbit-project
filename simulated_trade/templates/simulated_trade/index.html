@@ -1,33 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'simulated_trade/css/style.css' %}">
+</head>
 <body>
-    <div id="market_list"></div>
+    <form>
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="input_name"></input>
+        </div>
+        <div>
+            <label for="price">매수가격(KRW)<label>
+            <input type="text" id="input_price"></input>
+        </div>
+        <div>
+            <label for="quantity">주문수량<label>
+            <input type="text" id="input_quantity" value="0"></input>
+        </div>
+        <div>
+            <label for="total">주문총액(KRW)<label>
+            <input type="text" id="input_total" value="0"></input>
+        </div>
+        <a href="#" id="buyBtn">매수</a>
+    </form>
+    <div id="market_list" style="cursor: default;"></div>
     <script>
+
+        document.getElementById('buyBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            alert("매수주문이 정상 접수되었습니다.");
+        });
+
+        
+        var marketList = document.getElementById('market_list');
+        
+        // 코인 클릭
+        marketList.addEventListener('click', function(event) {
+            var target = event.target;
+            var code = target.closest('.code');
+
+            if (code) {
+                var coinName = code.querySelector('.name').textContent;
+                var coinPrice = code.querySelector('.price').textContent;
+
+                var inputName = document.getElementById('input_name');
+                inputName.value = coinName;
+
+                var inputPrice = document.getElementById('input_price');
+                inputPrice.value = parseFloat(coinPrice).toLocaleString();
+            }
+        });
+
+        // 코인 수량 입력
+        var inputQuantity = document.getElementById('input_quantity');
+        var inputPrice = document.getElementById('input_price');
+        var inputTotal = document.getElementById('input_total');
+
+        inputQuantity.addEventListener('input', function(event) {
+
+            var quantity = parseFloat(event.target.value);
+            var price = parseFloat(inputPrice.value);
+            var total = quantity * price;
+
+            inputTotal.value = isNaN(total) ? 0 : total.toLocaleString();
+        });
+
+
         const socket = new WebSocket(
             'ws://' + window.location.host + '/ws/sml_trade/'
         );    
 
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            var group_check = document.getElementById('group');
 
-            if (!group_check) {
-                var group = document.createElement('div');
-                group.setAttribute('id', 'group')
+            for (key in data) {
+                var code = document.getElementById(data[key].code);
 
-                for(key in data) {           
-                    market = document.createElement('div');
-                    market.setAttribute('class', 'code');
-                    market.innerText = data[key].code + ' ' + data[key].trade_price;                
+                if (!code) {
+                    var code = document.createElement('div');
+                    code.setAttribute('id', data[key].code)
+                    code.setAttribute('class', 'code')
 
-                    group.appendChild(market);
-                    market_list.appendChild(group);
-                };
-            } else {
-                var i = 0;
-                for(key in data) {   
-                    var market = document.getElementsByClassName('code');
-                    market[i].innerHTML = data[key].code + ' ' + data[key].trade_price;                
-                    i++;
-                };
+                    var name = document.createElement('span');
+                    name.setAttribute('class', 'name');
+                    name.textContent = data[key].name;
+
+                    var price = document.createElement('span');
+                    price.setAttribute('class', 'price');
+                    price.textContent= data[key].trade_price;
+                        
+                    code.appendChild(name);
+                    code.appendChild(price);
+                    market_list.appendChild(code);
+                } else {
+
+                }
             }
         };
 </script>
