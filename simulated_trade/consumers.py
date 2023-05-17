@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.forms.models import model_to_dict
 
-from coin.coin import get_krw_market_list
+from coin.coin import get_krw_codes_list
 from coin.models import Ticker
 
 import asyncio
@@ -24,7 +24,7 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
 
     async def send_ticker(self):
-        length = len(get_krw_market_list()) 
+        length = len(get_krw_codes_list()) 
 
         while True:
             ticker_qs = Ticker.objects.order_by('-id')[:length]

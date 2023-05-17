@@ -1,6 +1,6 @@
 from urllib.parse import urlencode, unquote
 from api_key import access_key, secret_key, server_url
-from coin.coin import get_krw_market_codes
+from coin.coin import get_krw_codes_list
 
 import jwt
 import hashlib
@@ -31,7 +31,7 @@ def get_krw():
 
 
 def get_coins():
-    market = get_krw_market_codes()
+    market = get_krw_codes_list()
     coins = res[1:]
     coin_list = []
 

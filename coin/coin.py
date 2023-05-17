@@ -14,7 +14,7 @@ headers = {"accept": "application/json"}
 response = requests.get(url, headers=headers)
 
 
-def get_krw_market_codes():
+def get_krw_codes_list():
     krw_codes = []
 
     for res in response.json():
@@ -33,14 +33,14 @@ async def get_ticker():
                 {"ticket":"ticket"},
                 {
                     "type":"ticker",
-                    "codes": get_krw_market_codes()
+                    "codes": get_krw_codes_list()
                 }
             ]
 
             await websocket.send(json.dumps(request_ticker))
             await websocket.ping()
         
-            for _ in range(len(get_krw_market_codes())):
+            for _ in range(len(get_krw_codes_list())):
                 recv = await websocket.recv()
                 recv_obj = json.loads(recv)
 
@@ -77,7 +77,7 @@ async def get_ticker():
 
 
 def get_top_trade_price_coin():
-    length = len(get_krw_market_codes()) 
+    length = len(get_krw_codes_list()) 
     ticker_list = Ticker.objects.order_by('-id')[:length]
     coin_list = []
 
