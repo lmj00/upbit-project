@@ -4,6 +4,7 @@ from django.db import models
 class Ticker(models.Model):
     type = models.CharField(default='', max_length=10)
     code = models.CharField(default='', max_length=10)
+    name = models.CharField(default='', max_length=20)
     opening_price = models.FloatField()
     high_price = models.FloatField()
     low_price = models.FloatField()	 
