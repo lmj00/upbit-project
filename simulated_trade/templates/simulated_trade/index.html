@@ -5,31 +5,76 @@
     <link rel="stylesheet" type="text/css" href="{% static 'simulated_trade/css/style.css' %}">
 </head>
 <body>
-    <form>
+    <form id="in_form">
         <div>
-            <label for="name">이름</label>
-            <input type="text" id="input_name"></input>
+            <label for="in_name">이름</label>
+            <input type="text" id="in_name" name="in_name"></input>
         </div>
         <div>
-            <label for="price">매수가격(KRW)<label>
-            <input type="text" id="input_price"></input>
+            <label for="in_price">매수가격(KRW)<label>
+            <input type="text" id="in_price" name="in_price"></input>
         </div>
         <div>
-            <label for="quantity">주문수량<label>
-            <input type="text" id="input_quantity" value="0"></input>
+            <label for="in_quantity">주문수량<label>
+            <input type="text" id="in_quantity" name="in_quantity" value="0"></input>
         </div>
         <div>
-            <label for="total">주문총액(KRW)<label>
-            <input type="text" id="input_total" value="0"></input>
+            <label for="in_total">주문총액(KRW)<label>
+            <input type="text" id="in_total" name="in_total" value="0"></input>
         </div>
         <a href="#" id="buyBtn">매수</a>
     </form>
     <div id="market_list" style="cursor: default;"></div>
     <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
+        const csrftoken = getCookie('csrftoken');
+        
         document.getElementById('buyBtn').addEventListener('click', function(event) {
             event.preventDefault();
-            alert("매수주문이 정상 접수되었습니다.");
+            
+            const form = document.getElementById('in_form');
+            const formData = new FormData(form);  
+            const jsonData = {};
+
+
+            for (let pair of formData.entries()) {
+                jsonData[pair[0]] = pair[1];
+            }
+                
+            fetch('order/bid', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+
+                body: JSON.stringify(jsonData)
+            })
+
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            
+            .catch(error => {
+                alert("에러");
+            });
+
         });
 
         
@@ -44,18 +89,18 @@
                 var coinName = code.querySelector('.name').textContent;
                 var coinPrice = code.querySelector('.price').textContent;
 
-                var inputName = document.getElementById('input_name');
+                var inputName = document.getElementById('in_name');
                 inputName.value = coinName;
 
-                var inputPrice = document.getElementById('input_price');
-                inputPrice.value = parseFloat(coinPrice).toLocaleString();
+                var inputPrice = document.getElementById('in_price');
+                inputPrice.value = parseFloat(coinPrice);
             }
         });
 
         // 코인 수량 입력
-        var inputQuantity = document.getElementById('input_quantity');
-        var inputPrice = document.getElementById('input_price');
-        var inputTotal = document.getElementById('input_total');
+        var inputQuantity = document.getElementById('in_quantity');
+        var inputPrice = document.getElementById('in_price');
+        var inputTotal = document.getElementById('in_total');
 
         inputQuantity.addEventListener('input', function(event) {
 
