@@ -23,6 +23,7 @@
             <input type="text" id="in_total" name="in_total" value="0"></input>
         </div>
         <a href="#" id="buyBtn">매수</a>
+        <a href="#" id="sellBtn">매도</a>
     </form>
     <div id="market_list" style="cursor: default;"></div>
     <script>
@@ -77,7 +78,41 @@
 
         });
 
+
+        document.getElementById('sellBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('in_form');
+            const formData = new FormData(form);  
+            const jsonData = {};
+
+
+            for (let pair of formData.entries()) {
+                jsonData[pair[0]] = pair[1];
+            }
+                
+            fetch('order/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+
+                body: JSON.stringify(jsonData)
+            })
+
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            
+            .catch(error => {
+                alert("에러");
+            });
+
+        });
         
+
         var marketList = document.getElementById('market_list');
         
         // 코인 클릭
