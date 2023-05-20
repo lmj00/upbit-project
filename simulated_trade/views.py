@@ -18,12 +18,24 @@ def order_bid(request):
     kr_name = json_obj['in_name']
     code = reversed_dic[kr_name].split('-')
 
-    smlAccount.objects.create(
+    in_quantity = float(json_obj['in_quantity'])
+    in_price = float( json_obj['in_price'])
+
+    obj, created = smlAccount.objects.get_or_create(
+        unit_currency = code[1],
         currency = code[0],
-        balance = json_obj['in_quantity'], 
-        avg_buy_price = json_obj['in_price'],
-        unit_currency = code[1]
-    )
+        defaults = {
+            'balance': in_quantity,
+            'avg_buy_price' : in_price
+        }
+    )   
+
+    if created == False:
+        smlAccount.objects.filter(id=obj.id).update(
+            balance = obj.balance + in_quantity,
+            avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
+        )
+        
 
     reponse_data = {
         'message': '매수 주문이 완료되었습니다.'
