@@ -19,7 +19,7 @@ def order_bid(request):
     code = reversed_dic[kr_name].split('-')
 
     in_quantity = float(json_obj['in_quantity'])
-    in_price = float( json_obj['in_price'])
+    in_price = float(json_obj['in_price'])
 
     obj, created = smlAccount.objects.get_or_create(
         unit_currency = code[1],
@@ -39,6 +39,39 @@ def order_bid(request):
 
     reponse_data = {
         'message': '매수 주문이 완료되었습니다.'
+    }
+
+    return JsonResponse(reponse_data)
+
+
+def order_ask(request):
+    json_obj = json.loads(request.body)    
+    reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
+
+    kr_name = json_obj['in_name']
+    code = reversed_dic[kr_name].split('-')
+
+    unit_currency = code[1]
+    currency = code[0]
+    sell_balance = float(json_obj['in_quantity'])
+    sell_price = float(json_obj['in_price'])
+    
+    qs = smlAccount.objects.filter(
+        currency=currency, 
+        unit_currency=unit_currency
+    )
+
+    ac_coin = qs.first()
+    
+    if sell_balance == ac_coin.balance:
+        krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * ac_coin.balance
+        krw_account = smlAccount.objects.get(unit_currency='KRW')
+
+        smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + krw)
+        smlAccount.objects.get(id=ac_coin.id).delete()
+
+    reponse_data = {
+        'message': '매도 주문이 완료되었습니다.'
     }
 
     return JsonResponse(reponse_data)
