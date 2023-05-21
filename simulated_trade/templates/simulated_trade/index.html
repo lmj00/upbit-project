@@ -11,7 +11,7 @@
             <input type="text" id="in_name" name="in_name"></input>
         </div>
         <div>
-            <label for="in_price">매수가격(KRW)<label>
+            <label for="in_price">가격(KRW)<label>
             <input type="text" id="in_price" name="in_price"></input>
         </div>
         <div>
@@ -45,7 +45,7 @@
 
         const csrftoken = getCookie('csrftoken');
         
-        document.getElementById('buyBtn').addEventListener('click', function(event) {
+        function order(event){
             event.preventDefault();
             
             const form = document.getElementById('in_form');
@@ -56,8 +56,10 @@
             for (let pair of formData.entries()) {
                 jsonData[pair[0]] = pair[1];
             }
-                
-            fetch('order/bid', {
+            
+            const url = event.target.id === 'buyBtn' ? 'order/bid' : 'order/ask'
+            
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -76,42 +78,11 @@
                 alert("에러");
             });
 
-        });
-
-
-        document.getElementById('sellBtn').addEventListener('click', function(event) {
-            event.preventDefault();
-            
-            const form = document.getElementById('in_form');
-            const formData = new FormData(form);  
-            const jsonData = {};
-
-
-            for (let pair of formData.entries()) {
-                jsonData[pair[0]] = pair[1];
-            }
-                
-            fetch('order/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-
-                body: JSON.stringify(jsonData)
-            })
-
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            
-            .catch(error => {
-                alert("에러");
-            });
-
-        });
+        };
         
+        document.getElementById('buyBtn').addEventListener('click', order);
+        document.getElementById('sellBtn').addEventListener('click', order);
+
 
         var marketList = document.getElementById('market_list');
         
