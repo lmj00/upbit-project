@@ -17,11 +17,17 @@ def order_bid(request):
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
 
+    krw_balance_obj = smlAccount.objects.get(unit_currency='KRW')
+    krw_balance = krw_balance_obj.balance
+
     kr_name = json_obj['in_name']
     code = reversed_dic[kr_name].split('-')
 
     in_quantity = float(json_obj['in_quantity'])
     in_price = float(json_obj['in_price'])
+    in_total = in_quantity * in_price
+    
+    message = ''
 
     obj, created = smlAccount.objects.get_or_create(
         unit_currency = code[1],
@@ -32,15 +38,24 @@ def order_bid(request):
         }
     )   
 
-    if created == False:
-        smlAccount.objects.filter(id=obj.id).update(
-            balance = obj.balance + in_quantity,
-            avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
-        )
-        
+    if krw_balance < in_total + (in_total * 0.0005):
+        message = '주문가능 금액이 부족합니다.' 
+    else:
+        if created == False:
+            krw_balance_obj.balance -= in_total + (in_total * 0.0005) 
+            krw_balance_obj.save()
+
+            smlAccount.objects.filter(id=obj.id).update(
+                balance = obj.balance + in_quantity,
+                avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
+            )
+
+            message = '매수주문이 완료되었습니다.'
+
+
 
     reponse_data = {
-        'message': '매수 주문이 완료되었습니다.'
+        'message': message
     }
 
     return JsonResponse(reponse_data)
