@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.db import transaction
+
 from .models import smlAccount
 from coin.coin import get_kr_name_dic
 
@@ -44,6 +46,7 @@ def order_bid(request):
     return JsonResponse(reponse_data)
 
 
+@transaction.atomic
 def order_ask(request):
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
@@ -62,16 +65,22 @@ def order_ask(request):
     )
 
     ac_coin = qs.first()
-    
-    if sell_balance == ac_coin.balance:
-        krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * ac_coin.balance
-        krw_account = smlAccount.objects.get(unit_currency='KRW')
+    message = ''
 
-        smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + krw)
-        smlAccount.objects.get(id=ac_coin.id).delete()
+    try:
+        if sell_balance == ac_coin.balance:
+            krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * ac_coin.balance
+            krw_account = smlAccount.objects.get(unit_currency='KRW')
+            
+            smlAccount.objects.get(id=ac_coin.id).delete()
+            smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + krw)
+            message = '매도 주문이 완료되었습니다.'
+            
+    except Exception as e:
+        message = e
 
     reponse_data = {
-        'message': '매도 주문이 완료되었습니다.'
+        'message': message
     }
 
     return JsonResponse(reponse_data)
