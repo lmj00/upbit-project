@@ -1,26 +1,29 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.forms.models import model_to_dict
 
-from coin.coin import get_krw_codes_list
+from coin.coin import get_krw_codes_list, get_coin_snapshot
+
 from coin.models import Ticker
+from .models import smlAccount
 
 import asyncio
 import json
 
 
 class smlTradeConsumer(AsyncWebsocketConsumer):
-    room_group_name = 'coin_group'
 
     async def connect(self):
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        # self.room_group_name = 'coin_group'
+
+        # await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
         await self.send_ticker()
     
 
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name, self.channel_name
-        )
+    # async def disconnect(self, close_code):
+    #     await self.channel_layer.group_discard(
+    #         self.room_group_name, self.channel_name
+    #     )
 
 
     async def send_ticker(self):
@@ -30,14 +33,44 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
             ticker_qs = Ticker.objects.order_by('-id')[:length]
             ticker_ls = [model_to_dict(ts) for ts in ticker_qs]
 
-            await self.channel_layer.group_send(
-                self.room_group_name, { 
-                    "ticker_ls": ticker_ls
-                }
-            )
+            # await self.channel_layer.group_send(
+            #     self.room_group_name, { 
+            #         "data": ticker_ls
+            #     }
+            # )
 
             ticker_ls.sort(key=lambda x:x['acc_trade_price_24h'], reverse=True)
 
-            await self.send(text_data=json.dumps(ticker_ls))
+            await self.send(text_data=json.dumps({
+                "type": "ticker",
+                "value": ticker_ls
+            }))
 
+            await self.send_account()
             await asyncio.sleep(1)
+
+
+    async def send_account(self):
+        sm_ac_objects = smlAccount.objects.all()
+        sml_account_ls = []
+        
+        for coin in sm_ac_objects:
+            code = coin.currency + "-" + coin.unit_currency
+            dic = {}
+
+            if code != 'KRW-KRW':
+                gcs = get_coin_snapshot(code)
+                rate_of_return = round((gcs['trade_price'] - coin.avg_buy_price) / coin.avg_buy_price * 100, 2)
+            
+                dic['code'] = code
+                dic['balance'] = coin.balance
+                dic['avg_buy_price'] = coin.avg_buy_price
+                dic['rate_of_return'] = rate_of_return
+
+                sml_account_ls.append(dic)
+
+
+        await self.send(text_data=json.dumps({
+            "type": "sml_account",
+            "value": sml_account_ls
+        }))
