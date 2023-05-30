@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.forms.models import model_to_dict
 
-from coin.coin import get_krw_codes_list, get_coin_snapshot
+from coin.coin import get_krw_codes_list, get_coin_snapshot, get_kr_name_dic
 
 from coin.models import Ticker
 from .models import smlAccount
@@ -60,12 +60,17 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
             if code != 'KRW-KRW':
                 gcs = get_coin_snapshot(code)
+                name = get_kr_name_dic()[code]
+
                 rate_of_return = round((gcs['trade_price'] - coin.avg_buy_price) / coin.avg_buy_price * 100, 2)
-            
-                dic['code'] = code
+                amount_money = coin.balance * coin.avg_buy_price
+                valuation_amount = amount_money + (amount_money * rate_of_return / 100) 
+
+                dic['name'] = name
                 dic['balance'] = coin.balance
                 dic['avg_buy_price'] = coin.avg_buy_price
                 dic['rate_of_return'] = rate_of_return
+                dic['valuation_amount'] = valuation_amount
 
                 sml_account_ls.append(dic)
 
