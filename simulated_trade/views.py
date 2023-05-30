@@ -29,18 +29,18 @@ def order_bid(request):
     
     message = ''
 
-    obj, created = smlAccount.objects.get_or_create(
-        unit_currency = code[1],
-        currency = code[0],
-        defaults = {
-            'balance': in_quantity,
-            'avg_buy_price' : in_price
-        }
-    )   
-
     if krw_balance < in_total + (in_total * 0.0005):
         message = '주문가능 금액이 부족합니다.' 
     else:
+        obj, created = smlAccount.objects.get_or_create(
+            unit_currency = code[1],
+            currency = code[0],
+            defaults = {
+                'balance': in_quantity,
+                'avg_buy_price' : in_price
+            }
+        )   
+        
         if created == False:
             krw_balance_obj.balance -= in_total + (in_total * 0.0005) 
             krw_balance_obj.save()
@@ -50,7 +50,7 @@ def order_bid(request):
                 avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
             )
 
-            message = '매수주문이 완료되었습니다.'
+        message = '매수주문이 완료되었습니다.'
 
 
 
