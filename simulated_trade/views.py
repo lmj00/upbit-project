@@ -41,10 +41,10 @@ def order_bid(request):
             }
         )   
         
-        if created == False:
-            krw_balance_obj.balance -= in_total + (in_total * 0.0005) 
-            krw_balance_obj.save()
+        krw_balance_obj.balance -= in_total + (in_total * 0.0005) 
+        krw_balance_obj.save()
 
+        if created == False:
             smlAccount.objects.filter(id=obj.id).update(
                 balance = obj.balance + in_quantity,
                 avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
