@@ -84,12 +84,22 @@ def order_ask(request):
     message = ''
 
     try:
-        if sell_balance == ac_coin.balance:
-            krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * ac_coin.balance
+        if sell_balance > ac_coin.balance:
+            message = "보유수량이 부족합니다."
+        else:
+            krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
+            total_krw = krw - (krw * 0.0005)
+
+            if sell_balance < ac_coin.balance:
+                smlAccount.objects.filter(id=ac_coin.id).update(
+                    balance = ac_coin.balance - sell_balance
+                )
+            else:
+                smlAccount.objects.get(id=ac_coin.id).delete()
+
             krw_account = smlAccount.objects.get(unit_currency='KRW')
-            
-            smlAccount.objects.get(id=ac_coin.id).delete()
-            smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + krw)
+            smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
+
             message = '매도 주문이 완료되었습니다.'
             
     except Exception as e:
