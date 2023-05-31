@@ -13,6 +13,7 @@ def index(request):
     return render(request, 'simulated_trade/index.html')
 
 
+@transaction.atomic
 def order_bid(request):  
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
