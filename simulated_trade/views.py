@@ -24,31 +24,33 @@ def order_bid(request):
     kr_name = json_obj['in_name']
     code = reversed_dic[kr_name].split('-')
 
-    in_quantity = float(json_obj['in_quantity'])
-    in_price = float(json_obj['in_price'])
-    in_total = in_quantity * in_price
+    buy_quantity = float(json_obj['in_quantity'])
+    buy_price = float(json_obj['in_price'])
+    buy_total = buy_quantity * buy_price
     
     message = ''
-
-    if krw_balance < in_total + (in_total * 0.0005):
+    
+    if krw_balance < buy_total + (buy_total * 0.0005):
         message = '주문가능 금액이 부족합니다.' 
+    elif buy_total < 5000:
+        message = '최소 주문금액은 5000KRW입니다.'
     else:
         obj, created = smlAccount.objects.get_or_create(
             unit_currency = code[1],
             currency = code[0],
             defaults = {
-                'balance': in_quantity,
-                'avg_buy_price' : in_price
+                'balance': buy_quantity,
+                'avg_buy_price' : buy_price
             }
         )   
         
-        krw_balance_obj.balance -= in_total + (in_total * 0.0005) 
+        krw_balance_obj.balance -= buy_total + (buy_total * 0.0005) 
         krw_balance_obj.save()
 
         if created == False:
             smlAccount.objects.filter(id=obj.id).update(
-                balance = obj.balance + in_quantity,
-                avg_buy_price = (obj.avg_buy_price * obj.balance + in_price * in_quantity) / (obj.balance + in_quantity)
+                balance = obj.balance + buy_quantity,
+                avg_buy_price = (obj.avg_buy_price * obj.balance + buy_price * buy_quantity) / (obj.balance + buy_quantity)
             )
 
         message = '매수주문이 완료되었습니다.'
@@ -74,7 +76,8 @@ def order_ask(request):
     currency = code[0]
     sell_balance = float(json_obj['in_quantity'])
     sell_price = float(json_obj['in_price'])
-    
+    sell_total = sell_balance * sell_price
+
     qs = smlAccount.objects.filter(
         currency=currency, 
         unit_currency=unit_currency
@@ -86,6 +89,8 @@ def order_ask(request):
     try:
         if sell_balance > ac_coin.balance:
             message = "보유수량이 부족합니다."
+        elif sell_total < 5000:
+            message = '최소 주문금액은 5000KRW입니다.'
         else:
             krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
             total_krw = krw - (krw * 0.0005)
