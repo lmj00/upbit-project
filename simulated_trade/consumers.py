@@ -69,6 +69,7 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
                 dic['name'] = name
                 dic['balance'] = coin.balance
                 dic['avg_buy_price'] = coin.avg_buy_price
+                dic['amount_money'] = amount_money
                 dic['rate_of_return'] = rate_of_return
                 dic['valuation_amount'] = valuation_amount
 
