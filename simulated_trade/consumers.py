@@ -4,12 +4,15 @@ from django.forms.models import model_to_dict
 from coin.coin import get_krw_codes_list
 
 from coin.models import Ticker
-from .models import smlAccount
+from .models import Account
 
 import asyncio
 import json
 
 class smlTradeConsumer(AsyncWebsocketConsumer):
+    length = len(get_krw_codes_list()) 
+
+
     async def connect(self):
         # self.room_group_name = 'coin_group'
 
@@ -23,10 +26,8 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
 
     async def send_ticker(self):
-        length = len(get_krw_codes_list()) 
-
         while True:
-            ticker_qs = Ticker.objects.order_by('-id')[:length]
+            ticker_qs = Ticker.objects.order_by('-id')[:self.length]
             ticker_ls = [model_to_dict(ts) for ts in ticker_qs]
 
             # await self.channel_layer.group_send(
@@ -46,19 +47,17 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
 
     async def send_account_coin(self):
-        length = len(get_krw_codes_list()) 
-
         while True:
-            sm_ac_objects = smlAccount.objects.all()
+            ac_obj = Account.objects.all()
             sml_account_ls = []
             gcs = None
 
-            for coin in sm_ac_objects:
+            for coin in ac_obj:
                 code = coin.currency + "-" + coin.unit_currency
                 dic = {}
 
                 if code != 'KRW-KRW':
-                    ticker_qs = Ticker.objects.order_by('-id')[:length]
+                    ticker_qs = Ticker.objects.order_by('-id')[:self.length]
 
                     for tqs in ticker_qs:
                         if code == tqs.code:
@@ -86,14 +85,12 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
 
     async def send_account_balance(self):
-        length = len(get_krw_codes_list()) 
-
         while True:
-            sm_ac_objects = smlAccount.objects.all()
+            ac_obj = Account.objects.all()
             gcs = None
 
             # 보유 KRW
-            holding_krw = sm_ac_objects.get(unit_currency='KRW').balance
+            holding_krw = ac_obj.get(unit_currency='KRW').balance
 
             # 총 보유 자산
             total_assets = holding_krw 
@@ -110,11 +107,11 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
             # 수익률
             rate_of_return = 0
             
-            for coin in sm_ac_objects:
+            for coin in ac_obj:
                 code = coin.currency + "-" + coin.unit_currency
 
                 if code != 'KRW-KRW':
-                    ticker_qs = Ticker.objects.order_by('-id')[:length]
+                    ticker_qs = Ticker.objects.order_by('-id')[:self.length]
 
                     for tqs in ticker_qs:
                         if code == tqs.code:

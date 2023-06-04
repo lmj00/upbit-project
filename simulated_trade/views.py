@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from .models import smlAccount
+from .models import Account
 from coin.coin import get_kr_name_dic
 
 import json
@@ -18,7 +18,7 @@ def order_bid(request):
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
 
-    krw_balance_obj = smlAccount.objects.get(unit_currency='KRW')
+    krw_balance_obj = Account.objects.get(unit_currency='KRW')
     krw_balance = krw_balance_obj.balance
 
     kr_name = json_obj['in_name']
@@ -35,7 +35,7 @@ def order_bid(request):
     elif buy_total < 5000:
         message = '최소 주문금액은 5000KRW입니다.'
     else:
-        obj, created = smlAccount.objects.get_or_create(
+        obj, created = Account.objects.get_or_create(
             unit_currency = code[1],
             currency = code[0],
             defaults = {
@@ -48,7 +48,7 @@ def order_bid(request):
         krw_balance_obj.save()
 
         if created == False:
-            smlAccount.objects.filter(id=obj.id).update(
+            Account.objects.filter(id=obj.id).update(
                 balance = obj.balance + buy_quantity,
                 avg_buy_price = (obj.avg_buy_price * obj.balance + buy_price * buy_quantity) / (obj.balance + buy_quantity)
             )
@@ -78,7 +78,7 @@ def order_ask(request):
     sell_price = float(json_obj['in_price'])
     sell_total = sell_balance * sell_price
 
-    qs = smlAccount.objects.filter(
+    qs = Account.objects.filter(
         currency=currency, 
         unit_currency=unit_currency
     )
@@ -96,14 +96,14 @@ def order_ask(request):
             total_krw = krw - (krw * 0.0005)
 
             if sell_balance < ac_coin.balance:
-                smlAccount.objects.filter(id=ac_coin.id).update(
+                Account.objects.filter(id=ac_coin.id).update(
                     balance = ac_coin.balance - sell_balance
                 )
             else:
-                smlAccount.objects.get(id=ac_coin.id).delete()
+                Account.objects.get(id=ac_coin.id).delete()
 
-            krw_account = smlAccount.objects.get(unit_currency='KRW')
-            smlAccount.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
+            krw_account = Account.objects.get(unit_currency='KRW')
+            Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
 
             message = '매도 주문이 완료되었습니다.'
             
