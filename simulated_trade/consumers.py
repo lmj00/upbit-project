@@ -17,7 +17,8 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
         await self.accept()
         await asyncio.gather(
             self.send_ticker(),
-            self.send_account_coin()
+            self.send_account_coin(),
+            self.send_account_balance()
         )
 
 
@@ -80,5 +81,64 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
                 "type": "sml_account",
                 "value": sml_account_ls
             }))
+
+            await asyncio.sleep(1)
+
+
+    async def send_account_balance(self):
+        length = len(get_krw_codes_list()) 
+
+        while True:
+            sm_ac_objects = smlAccount.objects.all()
+            gcs = None
+
+            # 보유 KRW
+            holding_krw = sm_ac_objects.get(unit_currency='KRW').balance
+
+            # 총 보유 자산
+            total_assets = holding_krw 
+            
+            # 총 매수
+            total_purchase = 0
+            
+            # 총 평가금액
+            total_evaluation = 0
+            
+            # 평가 손익
+            profit_or_loss = 0
+            
+            # 수익률
+            rate_of_return = 0
+            
+            for coin in sm_ac_objects:
+                code = coin.currency + "-" + coin.unit_currency
+
+                if code != 'KRW-KRW':
+                    ticker_qs = Ticker.objects.order_by('-id')[:length]
+
+                    for tqs in ticker_qs:
+                        if code == tqs.code:
+                            gcs = tqs
+                    
+                    total_assets += holding_krw 
+                    total_purchase += coin.balance * coin.avg_buy_price
+                    total_evaluation += (gcs.trade_price - coin.avg_buy_price) * coin.balance
+                    profit_or_loss += (gcs.trade_price - coin.avg_buy_price) * coin.balance
+                    rate_of_return += round((gcs.trade_price - coin.avg_buy_price) / coin.avg_buy_price * 100, 2)
+                    
+            account_balance = [
+                holding_krw, 
+                total_assets,
+                total_purchase,
+                total_evaluation,
+                profit_or_loss,
+                rate_of_return 
+            ]        
+
+            await self.send(text_data=json.dumps({
+                "type": "sml_account_balance",
+                "value": account_balance
+            }))
+
 
             await asyncio.sleep(1)
