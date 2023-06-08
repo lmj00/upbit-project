@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from .models import Account
+from .models import Account, History
 from coin.coin import get_kr_name_dic
 
 import json
@@ -52,6 +52,14 @@ def order_bid(request):
                 balance = obj.balance + buy_quantity,
                 avg_buy_price = (obj.avg_buy_price * obj.balance + buy_price * buy_quantity) / (obj.balance + buy_quantity)
             )
+
+        History.objects.create(
+            side = 'bid',
+            market = code[0] + '-' + code[1],
+            price = buy_price,
+            volume = buy_quantity,
+            paid_fee = buy_total * 0.0005
+        )
 
         message = '매수주문이 완료되었습니다.'
 
@@ -105,8 +113,16 @@ def order_ask(request):
             krw_account = Account.objects.get(unit_currency='KRW')
             Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
 
+            History.objects.create(
+                side = 'ask',
+                market = code[0] + '-' + code[1],
+                price = sell_price,
+                volume = sell_balance,
+                paid_fee = sell_total * 0.0005
+            )
+
             message = '매도 주문이 완료되었습니다.'
-            
+
     except Exception as e:
         message = e
 
