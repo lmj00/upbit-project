@@ -138,6 +138,8 @@ def order_ask(request):
     try:
         if Decimal(str(sell_price)) % Decimal(str(cts)) != 0:
             message = f'주문가격은 {cts}KRW 단위로 입력 부탁드립니다.'
+        elif ac_coin is None:
+            message = '주문가능 수량이 부족합니다.'
         elif sell_balance > ac_coin.balance:
             message = "보유수량이 부족합니다."
         elif sell_total < 5000:
