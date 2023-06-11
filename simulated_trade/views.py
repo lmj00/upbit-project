@@ -5,12 +5,48 @@ from django.db import transaction
 from .models import Account, History
 from coin.coin import get_kr_name_dic
 
+from decimal import Decimal
 import json
 
 
 # Create your views here.
 def index(request):
     return render(request, 'simulated_trade/index.html')
+
+
+def checkTickSize(price):
+    if price >= 2_000_000:
+        return 1000
+    
+    if price >= 1_000_000:
+        return 500
+    
+    if price >= 500_000:
+        return 100
+
+    if price >= 100_000:
+        return 50
+
+    if price >= 10_000:
+        return 10
+
+    if price >= 1_000:
+        return 5
+    
+    if price < 0.1:
+        return 0.0001
+    
+    if price < 1:
+        return 0.001
+    
+    if price < 10:
+        return 0.01
+    
+    if price < 100:
+        return 0.1
+    
+    if price < 1_000:
+        return 1
 
 
 @transaction.atomic
@@ -28,9 +64,13 @@ def order_bid(request):
     buy_price = float(json_obj['in_price'])
     buy_total = buy_quantity * buy_price
     
+    cts = checkTickSize(buy_price)
+
     message = ''
     
-    if krw_balance < buy_total + (buy_total * 0.0005):
+    if Decimal(str(buy_price)) % Decimal(str(cts)) != 0:
+        message = f'주문가격은 {cts}KRW 단위로 입력 부탁드립니다.'
+    elif krw_balance < buy_total + (buy_total * 0.0005):
         message = '주문가능 금액이 부족합니다.' 
     elif buy_total < 5000:
         message = '최소 주문금액은 5000KRW입니다.'
@@ -92,10 +132,13 @@ def order_ask(request):
     )
 
     ac_coin = qs.first()
+    cts = checkTickSize(sell_price)
     message = ''
 
     try:
-        if sell_balance > ac_coin.balance:
+        if Decimal(str(sell_price)) % Decimal(str(cts)) != 0:
+            message = f'주문가격은 {cts}KRW 단위로 입력 부탁드립니다.'
+        elif sell_balance > ac_coin.balance:
             message = "보유수량이 부족합니다."
         elif sell_total < 5000:
             message = '최소 주문금액은 5000KRW입니다.'
