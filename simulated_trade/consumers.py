@@ -78,23 +78,14 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
         ac_obj = Account.objects.all()
         gcs = None
 
-        # 보유 KRW
-        holding_krw = ac_obj.get(unit_currency='KRW').balance
-
-        # 총 보유 자산
-        total_assets = holding_krw 
-        
-        # 총 매수
-        total_purchase = 0
-        
-        # 총 평가금액
-        total_evaluation = 0
-        
-        # 평가 손익
-        profit_or_loss = 0
-        
-        # 수익률
-        rate_of_return = 0
+        ac_dic = {
+            'holding_krw':ac_obj.get(unit_currency='KRW').balance,
+            'total_assets': 0,
+            'total_purchase': 0,
+            'total_evaluation': 0,
+            'profit_or_loss': 0,
+            'rate_of_return': 0
+        }
         
         for coin in ac_obj:
             code = coin.currency + "-" + coin.unit_currency
@@ -105,23 +96,16 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
                 for tqs in ticker_qs:
                     if code == tqs.code:
                         gcs = tqs
+
+                ac_dic['total_purchase'] += coin.avg_buy_price * coin.balance
+                ac_dic['total_evaluation'] += (coin.avg_buy_price * coin.balance) + (gcs.trade_price - coin.avg_buy_price) * coin.balance
+
+        ac_dic['profit_or_loss'] = ac_dic['total_evaluation'] - ac_dic['total_purchase']
+        ac_dic['total_assets'] += ac_dic['holding_krw'] + ac_dic['total_evaluation']
+        ac_dic['rate_of_return'] = round((ac_dic['total_evaluation'] - ac_dic['total_purchase']) / ac_dic['total_purchase'] * 100, 2)
                 
-                total_assets += holding_krw 
-                total_purchase += coin.balance * coin.avg_buy_price
-                total_evaluation += (gcs.trade_price - coin.avg_buy_price) * coin.balance
-                profit_or_loss += (gcs.trade_price - coin.avg_buy_price) * coin.balance
-                rate_of_return += round((gcs.trade_price - coin.avg_buy_price) / coin.avg_buy_price * 100, 2)
-                
-        account_balance = [
-            holding_krw, 
-            total_assets,
-            total_purchase,
-            total_evaluation,
-            profit_or_loss,
-            rate_of_return 
-        ]        
 
         await self.send(text_data=json.dumps({
             "type": "sml_account_balance",
-            "value": account_balance
+            "value": ac_dic
         }))
