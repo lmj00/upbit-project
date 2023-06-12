@@ -157,18 +157,23 @@
             'ws://' + window.location.host + '/ws/sml_trade/'
         );    
         
-        
+
         function sendSignal() {
             socket.send(JSON.stringify({
                 'signal': true,
             }));
         }
 
+        let intervalId;
 
         socket.onopen = function(event) {
-            setInterval(sendSignal, 1000);
-        }    
+            intervalId = setInterval(sendSignal, 1000);
+        }   
 
+        socket.onclose = function(event) {
+            clearInterval(intervalId);
+        }
+        
 
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
