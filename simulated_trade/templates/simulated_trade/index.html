@@ -210,12 +210,12 @@
                 data.value.forEach(item => {
                     tableHTML += `
                         <tr>
-                        <td>${item.name}</td>
-                        <td>${item.balance}</td>
-                        <td>${item.avg_buy_price}</td>
-                        <td>${item.amount_money}</td>
-                        <td>${item.valuation_amount}</td>
-                        <td>${item.rate_of_return}</td>
+                            <td>${item.name}</td>
+                            <td>${item.balance}</td>
+                            <td>${item.avg_buy_price}</td>
+                            <td>${item.amount_money}</td>
+                            <td>${item.valuation_amount}</td>
+                            <td>${item.rate_of_return}</td>
                         </tr>
                     `;
                     });
@@ -224,21 +224,20 @@
 
             } else if (data.type == 'sml_account_balance') {
                 const tableBody2 = document.getElementById('t-body2');
-                const data_value = data.value;
+                const ac_dic = data.value;
 
                 let tableHTML2 = '';
-                
-                tableHTML2 += `
+                    tableHTML2 += `
                     <tr>
-                        <td>${data_value[0]}</td>
-                        <td>${data_value[1]}</td>
-                        <td>${data_value[2]}</td>
-                        <td>${data_value[3]}</td>
-                        <td>${data_value[4]}</td>
-                        <td>${data.value[5]}</td>
+                        <td>${ac_dic.holding_krw}</td>
+                        <td>${ac_dic.total_assets}</td>
+                        <td>${ac_dic.total_purchase}</td>
+                        <td>${ac_dic.profit_or_loss}</td>
+                        <td>${ac_dic.total_evaluation}</td>
+                        <td>${ac_dic.rate_of_return}</td>
                     </tr>
-                `;
-                
+                    `;
+
                 tableBody2.innerHTML = tableHTML2;
             }
 
