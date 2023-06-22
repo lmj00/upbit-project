@@ -52,7 +52,37 @@ inputQuantity.addEventListener('input', function(event) {
 });
 
 
-function order(event) {
+const bid_btn = document.getElementById('bid');
+const ask_btn = document.getElementById('ask');
+const side_label = document.getElementById('side');
+const trade_btn = document.getElementById('tradeBtn');
+
+bid_btn.addEventListener('click', function() {
+    side_label.textContent = '매수가격(KRW)';
+    trade_btn.textContent = '매수';
+    trade_btn.dataset.type = 'bid';
+    toggleButtonAttributes(bid_btn, true);
+    toggleButtonAttributes(ask_btn, false);
+});
+
+ask_btn.addEventListener('click', function() {
+    side_label.textContent = '매도가격(KRW)';
+    trade_btn.textContent = '매도';
+    trade_btn.dataset.type = 'ask';
+    toggleButtonAttributes(bid_btn, false);
+    toggleButtonAttributes(ask_btn, true);
+});
+
+function toggleButtonAttributes(button, isActive) {
+    button.removeAttribute('data-bs-toggle');
+    button.removeAttribute('data-bs-target');
+    button.removeAttribute('aria-controls');
+    button.removeAttribute('aria-selected');
+    button.classList.toggle('active', isActive);
+}
+
+
+document.getElementById('tradeBtn').addEventListener('click',  function(event){ 
     event.preventDefault();
 
     const form = document.getElementById('in_form');
@@ -63,8 +93,8 @@ function order(event) {
     for (let pair of formData.entries()) {
         jsonData[pair[0]] = pair[1];
     }
-
-    const url = event.target.id === 'buyBtn' ? 'order/bid' : 'order/ask'
+    
+    const url = event.target.dataset.type === 'bid' ? 'order/bid' : 'order/ask'
 
     fetch(url, {
         method: 'POST',
@@ -84,11 +114,7 @@ function order(event) {
         .catch(error => {
             alert("에러");
         });
-
-};
-
-document.getElementById('buyBtn').addEventListener('click', order);
-// document.getElementById('sellBtn').addEventListener('click', order); 
+});
 
 
 const socket = new WebSocket(
@@ -141,12 +167,30 @@ socket.onmessage = function (e) {
 
             }
         });
-    } else if(data.type == 'sml_account') {
+    } else if (data.type == 'sml_account_balance') {
         const tableBody = document.getElementById('t-body');
+        const ac_dic = data.value;
+
         let tableHTML = '';
+            tableHTML += `
+            <tr>
+                <td>${ac_dic.holding_krw}</td>
+                <td>${ac_dic.total_assets}</td>
+                <td>${ac_dic.total_purchase}</td>
+                <td>${ac_dic.profit_or_loss}</td>
+                <td>${ac_dic.total_evaluation}</td>
+                <td>${ac_dic.rate_of_return}</td>
+            </tr>
+            `;
+
+        tableBody.innerHTML = tableHTML;
+
+    } else if(data.type == 'sml_account') {
+        const tableBody2 = document.getElementById('t-body2');
+        let tableHTML2 = '';
         
         data.value.forEach(item => {
-            tableHTML += `
+            tableHTML2 += `
                 <tr style="border-bottom: 1px solid #ccc;">
                     <td>${item.name}</td>
                     <td>${item.balance}</td>
@@ -158,24 +202,7 @@ socket.onmessage = function (e) {
             `;
             });
         
-            tableBody.innerHTML = tableHTML;
+            tableBody2.innerHTML = tableHTML2;
 
-    } else if (data.type == 'sml_account_balance') {
-        const tableBody2 = document.getElementById('t-body2');
-        const ac_dic = data.value;
-
-        let tableHTML2 = '';
-            tableHTML2 += `
-            <tr>
-                <td>${ac_dic.holding_krw}</td>
-                <td>${ac_dic.total_assets}</td>
-                <td>${ac_dic.total_purchase}</td>
-                <td>${ac_dic.profit_or_loss}</td>
-                <td>${ac_dic.total_evaluation}</td>
-                <td>${ac_dic.rate_of_return}</td>
-            </tr>
-            `;
-
-        tableBody2.innerHTML = tableHTML2;
     }
 }
