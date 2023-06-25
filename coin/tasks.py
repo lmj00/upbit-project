@@ -1,10 +1,13 @@
-from background_task import background
+from celery import shared_task
 from .coin import get_ticker
-from datetime import datetime
-
 import asyncio
 
+@shared_task
+def my_task():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(get_ticker())
+    loop.close()
 
-@background(schedule=datetime.now())
-def background_ticker():
-    asyncio.run(get_ticker())
+
+my_task.delay()

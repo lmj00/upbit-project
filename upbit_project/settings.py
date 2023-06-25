@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'order',
     'trade',
     'simulated_trade',
-    'background_task'
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -116,7 +116,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -145,3 +145,25 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+## Celery
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://localhost:6380/0',
+    },
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6380/0'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'fetch-data-every-second': {
+        'task': 'coin.tasks.my_task',
+        'schedule': 1.0,
+    },
+}
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6380/0'
