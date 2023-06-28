@@ -20,7 +20,7 @@ const csrftoken = getCookie('csrftoken');
 var marketList = document.getElementById('market_list');
 
 // 코인 클릭
-marketList.addEventListener('click', function(event) {
+marketList.addEventListener('click', function (event) {
     var target = event.target;
     var code = target.closest('tr');
 
@@ -42,7 +42,7 @@ var inputQuantity = document.getElementById('in_quantity');
 var inputPrice = document.getElementById('in_price');
 var inputTotal = document.getElementById('in_total');
 
-inputQuantity.addEventListener('input', function(event) {
+inputQuantity.addEventListener('input', function (event) {
 
     var quantity = parseFloat(event.target.value);
     var price = parseFloat(inputPrice.value);
@@ -57,7 +57,7 @@ const ask_btn = document.getElementById('ask');
 const side_label = document.getElementById('side');
 const trade_btn = document.getElementById('tradeBtn');
 
-bid_btn.addEventListener('click', function() {
+bid_btn.addEventListener('click', function () {
     side_label.textContent = '매수가격(KRW)';
     trade_btn.textContent = '매수';
     trade_btn.dataset.type = 'bid';
@@ -65,7 +65,7 @@ bid_btn.addEventListener('click', function() {
     toggleButtonAttributes(ask_btn, false);
 });
 
-ask_btn.addEventListener('click', function() {
+ask_btn.addEventListener('click', function () {
     side_label.textContent = '매도가격(KRW)';
     trade_btn.textContent = '매도';
     trade_btn.dataset.type = 'ask';
@@ -82,7 +82,7 @@ function toggleButtonAttributes(button, isActive) {
 }
 
 
-document.getElementById('tradeBtn').addEventListener('click',  function(event){ 
+document.getElementById('tradeBtn').addEventListener('click', function (event) {
     event.preventDefault();
 
     const form = document.getElementById('in_form');
@@ -93,7 +93,7 @@ document.getElementById('tradeBtn').addEventListener('click',  function(event){
     for (let pair of formData.entries()) {
         jsonData[pair[0]] = pair[1];
     }
-    
+
     const url = event.target.dataset.type === 'bid' ? 'order/bid' : 'order/ask'
 
     fetch(url, {
@@ -164,7 +164,7 @@ socket.onmessage = function (e) {
                 var tableBody = document.querySelector('#market_list tbody');
                 tableBody.appendChild(row);
             } else {
-
+                code.nextElementSibling.innerHTML = item.trade_price;
             }
         });
     } else if (data.type == 'sml_account_balance') {
@@ -172,7 +172,7 @@ socket.onmessage = function (e) {
         const ac_dic = data.value;
 
         let tableHTML = '';
-            tableHTML += `
+        tableHTML += `
             <tr>
                 <td>${ac_dic.holding_krw}</td>
                 <td>${ac_dic.total_assets}</td>
@@ -185,10 +185,10 @@ socket.onmessage = function (e) {
 
         tableBody.innerHTML = tableHTML;
 
-    } else if(data.type == 'sml_account') {
+    } else if (data.type == 'sml_account') {
         const tableBody2 = document.getElementById('t-body2');
         let tableHTML2 = '';
-        
+
         data.value.forEach(item => {
             tableHTML2 += `
                 <tr style="border-bottom: 1px solid #ccc;">
@@ -200,9 +200,9 @@ socket.onmessage = function (e) {
                     <td>${item.rate_of_return}</td>
                 </tr>
             `;
-            });
-        
-            tableBody2.innerHTML = tableHTML2;
+        });
+
+        tableBody2.innerHTML = tableHTML2;
 
     }
 }
