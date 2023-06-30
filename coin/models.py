@@ -28,5 +28,5 @@ class Ticker(models.Model):
     highest_52_week_date = models.CharField(max_length=10)	
     lowest_52_week_price = models.FloatField()  	 
     lowest_52_week_date = models.CharField(max_length=10)	 
-    market_state = models.CharField(default='', max_length=8)	 
+    market_state = models.CharField(default='', max_length=12)	 
     timestamp = models.BigIntegerField()
