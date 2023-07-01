@@ -180,7 +180,14 @@ socket.onmessage = function (e) {
                 var tableBody = document.querySelector('#market_list tbody');
                 tableBody.appendChild(row);
             } else {
-                code.nextElementSibling.innerHTML = item.trade_price;
+                var price = code.nextElementSibling;
+                var percent = price.nextElementSibling;
+                var atp24h = percent.nextElementSibling;
+                
+                price.innerHTML = item.trade_price;
+                percent.querySelector('p').innerHTML = item.signed_change_rate;
+                percent.querySelector('em').innerHTML = item.signed_change_price;
+                atp24h.innerHTML = parseInt(item.acc_trade_price_24h / 1_000_000).toLocaleString() + '백만';
             }
         });
     } else if (data.type == 'sml_account_balance') {
