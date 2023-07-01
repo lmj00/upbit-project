@@ -155,11 +155,27 @@ socket.onmessage = function (e) {
                 var price = document.createElement('td');
                 price.setAttribute('class', 'price');
                 price.textContent = item.trade_price;
+                
+                var percent = document.createElement('td');
+                percent.setAttribute('class', 'percent');
+                
+                var scpP = document.createElement('p');
+                var scpEm = document.createElement('em');
+                scpP.textContent = item.signed_change_rate;
+                scpEm.textContent = item.signed_change_price;
+
+                percent.appendChild(scpP);
+                percent.appendChild(scpEm);
+
+                var atp24h = document.createElement('td');
+                atp24h.setAttribute('class', 'atp24h');
+                atp24h.textContent = parseInt((item.acc_trade_price_24h / 1_000_000)).toLocaleString() + '백만';
 
                 var row = document.createElement('tr');
-
                 row.appendChild(name);
                 row.appendChild(price);
+                row.appendChild(percent);
+                row.appendChild(atp24h);
 
                 var tableBody = document.querySelector('#market_list tbody');
                 tableBody.appendChild(row);
