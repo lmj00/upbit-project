@@ -13,6 +13,8 @@ class Ticker(models.Model):
     change = models.CharField(max_length=4)
     change_price = models.FloatField() 
     signed_change_price = models.FloatField()	 
+    change_rate = models.DecimalField(max_digits=20, decimal_places=10)
+    signed_change_rate = models.DecimalField(max_digits=20, decimal_places=10)
     trade_volume = models.FloatField()	 
     acc_trade_volume = models.FloatField()	 
     acc_trade_volume_24h = models.FloatField()	  
