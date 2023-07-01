@@ -73,6 +73,8 @@ async def get_ticker():
                     change = recv_obj['change'],
                     change_price =  recv_obj['change_price'],
                     signed_change_price = recv_obj['signed_change_price'],
+                    change_rate = recv_obj['change_rate'],
+                    signed_change_rate = recv_obj['signed_change_rate'],
                     trade_volume = recv_obj['trade_volume'],
                     acc_trade_volume = recv_obj['acc_trade_volume'],
                     acc_trade_volume_24h = recv_obj['acc_trade_volume_24h'],
