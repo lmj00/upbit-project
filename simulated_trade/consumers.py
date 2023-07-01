@@ -1,5 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.forms.models import model_to_dict
+from decimal import Decimal
 
 from coin.coin import get_krw_codes_list
 
@@ -30,7 +31,14 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
 
     async def send_ticker(self):
         ticker_qs = Ticker.objects.order_by('-id')[:self.length]
-        ticker_ls = [model_to_dict(ts) for ts in ticker_qs]
+        ticker_ls = []
+
+        for ts in ticker_qs:
+            ticker_dict = model_to_dict(ts)
+            ticker_dict['change_rate'] = str(round(ticker_dict['change_rate'] * 100, 2))
+            ticker_dict['signed_change_rate'] = str(round(ticker_dict['signed_change_rate'] * 100, 2))
+            ticker_ls.append(ticker_dict)
+
         ticker_ls.sort(key=lambda x:x['acc_trade_price_24h'], reverse=True)
 
         await self.send(text_data=json.dumps({
