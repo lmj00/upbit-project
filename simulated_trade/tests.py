@@ -46,8 +46,8 @@ class TestCase(TestCase):
         response_data = json.loads(response.content)
         message = response_data['message']
 
-        assert response.status_code == 200
-        assert message == '매수주문이 완료되었습니다.'
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(message, '매수주문이 완료되었습니다.')
 
 
     def test_order_ask(self):
@@ -72,5 +72,5 @@ class TestCase(TestCase):
         response_data = json.loads(response.content)
         message = response_data['message']
 
-        assert response.status_code == 200
-        assert message == '매도주문이 완료되었습니다.'
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(message, '매도주문이 완료되었습니다.')
