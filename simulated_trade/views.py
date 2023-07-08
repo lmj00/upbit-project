@@ -54,7 +54,7 @@ def order_bid(request):
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
 
-    krw_balance_obj = Account.objects.get(unit_currency='KRW')
+    krw_balance_obj = Account.objects.get(currency='KRW')
     krw_balance = krw_balance_obj.balance
 
     kr_name = json_obj['in_name']
@@ -76,8 +76,8 @@ def order_bid(request):
         message = '최소 주문금액은 5000KRW입니다.'
     else:
         obj, created = Account.objects.get_or_create(
-            unit_currency = code[1],
-            currency = code[0],
+            currency = code[1],
+            unit_currency = code[0],
             defaults = {
                 'balance': buy_quantity,
                 'avg_buy_price' : buy_price
@@ -120,8 +120,8 @@ def order_ask(request):
     kr_name = json_obj['in_name']
     code = reversed_dic[kr_name].split('-')
 
-    unit_currency = code[1]
-    currency = code[0]
+    currency = code[1]
+    unit_currency = code[0]
     sell_balance = float(json_obj['in_quantity'])
     sell_price = float(json_obj['in_price'])
     sell_total = sell_balance * sell_price
@@ -155,7 +155,7 @@ def order_ask(request):
             else:
                 Account.objects.get(id=ac_coin.id).delete()
 
-            krw_account = Account.objects.get(unit_currency='KRW')
+            krw_account = Account.objects.get(currency='KRW')
             Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
 
             History.objects.create(
@@ -166,7 +166,7 @@ def order_ask(request):
                 paid_fee = sell_total * 0.0005
             )
 
-            message = '매도 주문이 완료되었습니다.'
+            message = '매도주문이 완료되었습니다.'
 
     except Exception as e:
         message = e
