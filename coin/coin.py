@@ -39,6 +39,7 @@ def get_kr_name_dic():
     return kr_name_dic
 
 
+@transaction.atomic
 async def get_ticker():
     async with websockets.connect('wss://api.upbit.com/websocket/v1') as websocket:
         request_ticker = [
@@ -52,6 +53,7 @@ async def get_ticker():
         await websocket.send(json.dumps(request_ticker))
 
         kr_name_dic = get_kr_name_dic()
+        tickers = []
 
         for _ in range(len(get_krw_codes_list())):
             recv = await websocket.recv()
@@ -60,8 +62,8 @@ async def get_ticker():
             code = recv_obj['code']
             name = kr_name_dic.get(code)
 
-            with transaction.atomic():
-                Ticker.objects.create(
+            tickers.append(        
+                Ticker(
                     type = recv_obj['type'],
                     code = code,
                     name = name,
@@ -93,7 +95,9 @@ async def get_ticker():
                     market_state = recv_obj['market_state'],
                     timestamp = recv_obj['timestamp']
                 )
+            )
 
+        Ticker.objects.bulk_create(tickers)
 
 
 def get_top_trade_price_coin():
