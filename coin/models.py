@@ -31,4 +31,8 @@ class Ticker(models.Model):
     lowest_52_week_price = models.FloatField()  	 
     lowest_52_week_date = models.CharField(max_length=10)	 
     market_state = models.CharField(default='', max_length=12)	 
+    is_trading_suspended = models.BooleanField(null=True)
+    delisting_date = models.CharField(null=True, max_length=12)
+    market_warning = models.CharField(default='', max_length=7)
     timestamp = models.BigIntegerField()
+    stream_type = models.CharField(default='', max_length=8)
