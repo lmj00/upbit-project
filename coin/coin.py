@@ -62,43 +62,9 @@ async def get_ticker():
             code = recv_obj['code']
             name = kr_name_dic.get(code)
 
-            tickers.append(        
-                Ticker(
-                    type = recv_obj['type'],
-                    code = code,
-                    name = name,
-                    opening_price = recv_obj['opening_price'],
-                    high_price = recv_obj['high_price'],
-                    low_price = recv_obj['low_price'],
-                    trade_price = recv_obj['trade_price'],
-                    prev_closing_price = recv_obj['prev_closing_price'],
-                    change = recv_obj['change'],
-                    change_price =  recv_obj['change_price'],
-                    signed_change_price = recv_obj['signed_change_price'],
-                    change_rate = recv_obj['change_rate'],
-                    signed_change_rate = recv_obj['signed_change_rate'],
-                    trade_volume = recv_obj['trade_volume'],
-                    acc_trade_volume = recv_obj['acc_trade_volume'],
-                    acc_trade_volume_24h = recv_obj['acc_trade_volume_24h'],
-                    acc_trade_price = recv_obj['acc_trade_price'],
-                    acc_trade_price_24h	= recv_obj['acc_trade_price_24h'],
-                    trade_date = recv_obj['trade_date'],
-                    trade_time = recv_obj['trade_time'],
-                    trade_timestamp = recv_obj['trade_timestamp'],
-                    ask_bid = recv_obj['ask_bid'],
-                    acc_ask_volume = recv_obj['acc_ask_volume'],
-                    acc_bid_volume = recv_obj['acc_bid_volume'], 
-                    highest_52_week_price = recv_obj['highest_52_week_price'],
-                    highest_52_week_date = recv_obj['highest_52_week_date'],
-                    lowest_52_week_price = recv_obj['lowest_52_week_price'],
-                    lowest_52_week_date = recv_obj['lowest_52_week_date'],
-                    market_state = recv_obj['market_state'],
-                    timestamp = recv_obj['timestamp']
-                )
-            )
+            tickers.append(Ticker(name=name, **recv_obj))
 
         Ticker.objects.bulk_create(tickers)
-
 
 def get_top_trade_price_coin():
     length = len(get_krw_codes_list()) 
