@@ -22,18 +22,32 @@ var marketList = document.getElementById('market_list');
 // 코인 클릭
 marketList.addEventListener('click', function (event) {
     var target = event.target;
-    var code = target.closest('tr');
+    var tr = target.closest('tr');
 
-    if (code) {
-        var coinName = code.querySelector('.name').textContent;
-        var coinPrice = code.querySelector('.price').textContent;
+    var code = tr.querySelector('.name').id;
+    var coinName = tr.querySelector('.name').textContent;
+    var coinPrice = tr.querySelector('.price').textContent;
 
-        var inputName = document.getElementById('in_name');
-        inputName.value = coinName;
+    var inputName = document.getElementById('in_name');
+    inputName.value = coinName;
 
-        var inputPrice = document.getElementById('in_price');
-        inputPrice.value = parseFloat(coinPrice);
-    }
+    var inputPrice = document.getElementById('in_price');
+    inputPrice.value = parseFloat(coinPrice);
+
+    fetch('code/' + code, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+
+        })
+        .catch(error => {
+            alert(error);
+        });
+        
 });
 
 
