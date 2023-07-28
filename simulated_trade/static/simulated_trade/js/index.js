@@ -17,9 +17,9 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
+// 코인 클릭
 var marketList = document.getElementById('market_list');
 
-// 코인 클릭
 marketList.addEventListener('click', function (event) {
     var target = event.target;
     var tr = target.closest('tr');
@@ -66,26 +66,17 @@ inputQuantity.addEventListener('input', function (event) {
 });
 
 
+// 매수, 매도, 거래내역 버튼 클릭
 const bid_btn = document.getElementById('bid');
 const ask_btn = document.getElementById('ask');
+const history_btn = document.getElementById('history');
+
 const side_label = document.getElementById('side');
 const trade_btn = document.getElementById('tradeBtn');
+const in_form = document.getElementById('in_form');
 
-bid_btn.addEventListener('click', function () {
-    side_label.textContent = '매수가격(KRW)';
-    trade_btn.textContent = '매수';
-    trade_btn.dataset.type = 'bid';
-    toggleButtonAttributes(bid_btn, true);
-    toggleButtonAttributes(ask_btn, false);
-});
+const tableContainer = document.getElementById('history-table');
 
-ask_btn.addEventListener('click', function () {
-    side_label.textContent = '매도가격(KRW)';
-    trade_btn.textContent = '매도';
-    trade_btn.dataset.type = 'ask';
-    toggleButtonAttributes(bid_btn, false);
-    toggleButtonAttributes(ask_btn, true);
-});
 
 function toggleButtonAttributes(button, isActive) {
     button.removeAttribute('data-bs-toggle');
@@ -94,6 +85,41 @@ function toggleButtonAttributes(button, isActive) {
     button.removeAttribute('aria-selected');
     button.classList.toggle('active', isActive);
 }
+
+
+bid_btn.addEventListener('click', function () {
+    side_label.textContent = '매수가격(KRW)';
+    trade_btn.textContent = '매수';
+    trade_btn.dataset.type = 'bid';
+    toggleButtonAttributes(ask_btn, false);
+    toggleButtonAttributes(bid_btn, true);
+    toggleButtonAttributes(history_btn, false);
+
+    in_form.style.display = 'block';
+    tableContainer.style.display = 'none';
+});
+
+
+ask_btn.addEventListener('click', function () {
+    side_label.textContent = '매도가격(KRW)';
+    trade_btn.textContent = '매도';
+    trade_btn.dataset.type = 'ask';
+    toggleButtonAttributes(ask_btn, true);
+    toggleButtonAttributes(bid_btn, false);
+    toggleButtonAttributes(history_btn, false);
+
+    in_form.style.display = 'block';
+    tableContainer.style.display = 'none';
+});
+
+
+history_btn.addEventListener('click', function () {
+    toggleButtonAttributes(ask_btn, false);
+    toggleButtonAttributes(bid_btn, false);
+    toggleButtonAttributes(history_btn, true);
+    in_form.style.display = 'none';
+    tableContainer.style.display = 'block';
+});
 
 
 document.getElementById('tradeBtn').addEventListener('click', function (event) {
@@ -147,6 +173,7 @@ let intervalId;
 socket.onopen = function (event) {
     intervalId = setInterval(sendSignal, 1000);
 }
+
 
 socket.onclose = function (event) {
     clearInterval(intervalId);
