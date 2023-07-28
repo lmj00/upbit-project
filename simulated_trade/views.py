@@ -176,3 +176,14 @@ def order_ask(request):
     }
 
     return JsonResponse(reponse_data)
+
+
+def get_history(request, code):
+    history = History.objects.filter(market=code)
+    history_data = list(history.values()) 
+
+    reponse_data = {
+        'history': history_data
+    }
+
+    return JsonResponse(reponse_data)
