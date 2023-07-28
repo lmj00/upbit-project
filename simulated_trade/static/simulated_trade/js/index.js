@@ -34,7 +34,7 @@ marketList.addEventListener('click', function (event) {
     var inputPrice = document.getElementById('in_price');
     inputPrice.value = parseFloat(coinPrice);
 
-    fetch('code/' + code, {
+    fetch('history/' + code, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json',

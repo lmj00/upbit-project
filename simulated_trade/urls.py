@@ -5,5 +5,5 @@ urlpatterns =  [
     path('', views.index, name='sml-index'),
     path('order/bid', views.order_bid, name='order-bid'),
     path('order/ask', views.order_ask, name='order-ask'),
-    path('code/<str:code>', views.code, name='code')
+    path('history/<str:code>', views.get_history, name='get-history')
 ]
