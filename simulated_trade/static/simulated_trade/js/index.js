@@ -34,6 +34,8 @@ marketList.addEventListener('click', function (event) {
     var inputPrice = document.getElementById('in_price');
     inputPrice.value = parseFloat(coinPrice);
 
+    var historyHead = document.getElementById('history-head');
+    
     fetch('history/' + code, {
         method: 'GET',
         headers: {
@@ -42,6 +44,30 @@ marketList.addEventListener('click', function (event) {
     })
         .then(response => response.json())
         .then(data => {
+            
+            if (data.history.length > 0) {
+
+            } else {
+                const checkHs = document.getElementById('history-empty');
+
+                if (!checkHs) {
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    const div = document.createElement('div');
+    
+                    tr.setAttribute('id', 'history-empty');
+                    td.setAttribute('colspan', '4');
+                    
+                    div.style.textAlign = 'center';
+                    div.style.fontSize = '12px';
+                    div.style.color = 'rgb(86, 93, 106)';
+                    div.textContent = '체결 내역이 없습니다.';
+                    
+                    tr.appendChild(td);
+                    td.appendChild(div);
+                    historyHead.insertAdjacentElement('afterend', tr);
+                }
+            }
 
         })
         .catch(error => {
