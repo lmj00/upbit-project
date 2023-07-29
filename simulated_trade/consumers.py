@@ -53,7 +53,7 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
         gcs = None
 
         for coin in ac_obj:
-            code = coin.currency + "-" + coin.unit_currency
+            code = coin.unit_currency + "-" + coin.currency
             dic = {}
 
             if code != 'KRW-KRW':
@@ -96,7 +96,7 @@ class smlTradeConsumer(AsyncWebsocketConsumer):
         }
         
         for coin in ac_obj:
-            code = coin.currency + "-" + coin.unit_currency
+            code = coin.unit_currency + "-" + coin.currency
 
             if code != 'KRW-KRW':
                 ticker_qs = Ticker.objects.order_by('-id')[:self.length]
