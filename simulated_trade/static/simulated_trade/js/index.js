@@ -34,8 +34,6 @@ marketList.addEventListener('click', function (event) {
     var inputPrice = document.getElementById('in_price');
     inputPrice.value = parseFloat(coinPrice);
 
-    var historyHead = document.getElementById('history-head');
-    
     fetch('history/' + code, {
         method: 'GET',
         headers: {
@@ -44,13 +42,91 @@ marketList.addEventListener('click', function (event) {
     })
         .then(response => response.json())
         .then(data => {
+
+            const hsHead = document.getElementById('history-head');
+            const hsBody = document.getElementById('history-body');
+            const hsEmpty = document.getElementById('history-empty');
+
+            while (hsBody.firstChild) {
+                console.log(hsBody.firstChild);
+                hsBody.removeChild(hsBody.firstChild);
+            }
             
             if (data.history.length > 0) {
+                
+                if (hsEmpty) {
+                    hsEmpty.remove()
+                }
 
+                data.history.forEach(item => {
+                    const tr = document.createElement('tr');
+                    const td1 = document.createElement('td');
+                    const td2 = document.createElement('td');
+                    const td3 = document.createElement('td');
+                    const td4 = document.createElement('td');
+    
+                    const divDate = document.createElement('div');
+                    const divTime = document.createElement('div');
+    
+                    const divMarket = document.createElement('div');
+                    const divType = document.createElement('div');
+    
+                    const divPrice = document.createElement('div');
+                    const divTotal = document.createElement('div');
+                    
+                    const divAmount = document.createElement('div');
+    
+                    divDate.setAttribute('font-size', '11px');
+                    divDate.setAttribute('color', 'rgb(133, 139, 149)');
+                    divDate.setAttribute('margin-bottom', '4px');
+                    divTime.setAttribute('font-size', '11px');
+                    divTime.setAttribute('color', 'rgb(133, 139, 149)');
+    
+                    divMarket.setAttribute('font-weight', '700');
+                    divMarket.setAttribute('font-size', '12px');
+                    divMarket.setAttribute('color', 'rgb(210, 212, 214)');
+                    divMarket.setAttribute('text-align', 'center');
+                    divMarket.setAttribute('margin-bottom', '4px');
+                    divType.setAttribute('font-size', '12px');
+                    divType.setAttribute('text-align', 'center');
+    
+                    divPrice.setAttribute('font-size', '12px');
+                    divPrice.setAttribute('color', 'rgb(210, 212, 214)');
+                    divPrice.setAttribute('margin-bottom', '4px');
+                    divTotal.setAttribute('font-size', '12px');
+                    divTotal.setAttribute('color', 'rgb(210, 212, 214)');
+    
+                    divAmount.setAttribute('font-size', '12px');
+                    divAmount.setAttribute('color', 'rgb(210, 212, 214)');
+
+                    divDate.textContent = moment(item.created_at).format("YYYY.MM.DD");
+                    divTime.textContent = moment(item.created_at).format("HH:mm");
+                    td1.appendChild(divDate);
+                    td1.appendChild(divTime);
+
+                    divMarket.textContent = item.market; 
+                    divType.textContent = item.side === 'bid' ? '매수' : '매도' 
+                    td2.appendChild(divMarket);
+                    td2.appendChild(divType);
+    
+                    divPrice.textContent = item.price;    
+                    divTotal.textContent = item.price * item.volume;
+                    td3.appendChild(divPrice);
+                    td3.appendChild(divTotal);
+    
+                    divAmount.textContent = item.volume;
+                    td4.appendChild(divAmount);
+                    
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    
+                    hsBody.appendChild(tr);
+                });
+                
             } else {
-                const checkHs = document.getElementById('history-empty');
-
-                if (!checkHs) {
+                if (!hsEmpty) {
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
                     const div = document.createElement('div');
@@ -65,7 +141,7 @@ marketList.addEventListener('click', function (event) {
                     
                     tr.appendChild(td);
                     td.appendChild(div);
-                    historyHead.insertAdjacentElement('afterend', tr);
+                    hsHead.insertAdjacentElement('afterend', tr);
                 }
             }
 
@@ -95,7 +171,7 @@ inputQuantity.addEventListener('input', function (event) {
 // 매수, 매도, 거래내역 버튼 클릭
 const bid_btn = document.getElementById('bid');
 const ask_btn = document.getElementById('ask');
-const history_btn = document.getElementById('history');
+const history_btn = document.getElementById('history'); 
 
 const side_label = document.getElementById('side');
 const trade_btn = document.getElementById('tradeBtn');
