@@ -105,12 +105,12 @@ marketList.addEventListener('click', function (event) {
                     td1.appendChild(divTime);
 
                     divMarket.textContent = item.market; 
-                    divType.textContent = item.side === 'bid' ? '매수' : '매도' 
+                    divType.textContent = item.side;
                     td2.appendChild(divMarket);
                     td2.appendChild(divType);
     
-                    divPrice.textContent = item.price;    
-                    divTotal.textContent = item.price * item.volume;
+                    divPrice.textContent = parseFloat(item.price).toLocaleString();
+                    divTotal.textContent = parseInt(item.total).toLocaleString();
                     td3.appendChild(divPrice);
                     td3.appendChild(divTotal);
     
