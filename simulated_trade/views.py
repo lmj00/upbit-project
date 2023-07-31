@@ -180,10 +180,33 @@ def order_ask(request):
 
 def get_history(request, code):
     history = History.objects.filter(market=code)
-    history_data = list(history.values()) 
+    response_data = []
+    
+    for hs in history:
+        if hs.side == 'bid':
+            side = '매수'
+        else:
+            side = '매도'
 
-    reponse_data = {
-        'history': history_data
-    }
+        cts_price = checkTickSize(hs.price)
 
-    return JsonResponse(reponse_data)
+        if cts_price < 1:
+            point = str(cts_price).split()[-1]    
+            price = f'{hs.price:.{len(point)}f}'
+        else:
+            price = int(hs.price)
+
+        volume = f'{hs.volume:.8f}'
+
+        obj = {
+            'side': side,
+            'market': hs.market,           
+            'created_at': hs.created_at,
+            'price': price,
+            'total': Decimal(price) * Decimal(volume),
+            'volume': volume,
+        }
+
+        response_data.append(obj)
+
+    return JsonResponse({'history': response_data})
