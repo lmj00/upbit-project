@@ -34,6 +34,13 @@ marketList.addEventListener('click', function (event) {
     var inputPrice = document.getElementById('in_price');
     inputPrice.value = parseFloat(coinPrice);
 
+
+    // 차트
+    let symbol = code.split('-')[1];
+    changeSymbol(symbol);
+    
+
+    // 거래 내역
     fetch('history/' + code, {
         method: 'GET',
         headers: {
@@ -48,7 +55,6 @@ marketList.addEventListener('click', function (event) {
             const hsEmpty = document.getElementById('history-empty');
 
             while (hsBody.firstChild) {
-                console.log(hsBody.firstChild);
                 hsBody.removeChild(hsBody.firstChild);
             }
             
@@ -375,7 +381,7 @@ socket.onmessage = function (e) {
 
 
 // TradingView
-new TradingView.widget(
+var widget = new TradingView.widget(
     {
         "autosize": true,
         "symbol": "UPBIT:BTCKRW",
@@ -389,3 +395,20 @@ new TradingView.widget(
         "container_id": "tradingview_0e27d"
     }
 );
+
+function changeSymbol(code) {
+    new TradingView.widget(
+        {
+            "autosize": true,
+            "symbol": 'UPBIT:' + code + 'KRW',
+            "interval": "1",
+            "timezone": "Asia/Seoul",
+            "theme": "dark",
+            "style": "1",
+            "locale": "kr",
+            "enable_publishing": false,
+            "allow_symbol_change": true,
+            "container_id": "tradingview_0e27d"
+        }
+    );
+}
