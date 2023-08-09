@@ -149,7 +149,7 @@ marketList.addEventListener('click', function (event) {
         .catch(error => {
             alert(error);
         });
-        
+
 });
 
 
@@ -372,3 +372,20 @@ socket.onmessage = function (e) {
 
     }
 }
+
+
+// TradingView
+new TradingView.widget(
+    {
+        "autosize": true,
+        "symbol": "UPBIT:BTCKRW",
+        "interval": "1",
+        "timezone": "Asia/Seoul",
+        "theme": "dark",
+        "style": "1",
+        "locale": "kr",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "container_id": "tradingview_0e27d"
+    }
+);
