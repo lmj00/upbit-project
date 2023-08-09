@@ -391,6 +391,7 @@ var widget = new TradingView.widget(
         "style": "1",
         "locale": "kr",
         "enable_publishing": false,
+        "hide_side_toolbar": false,
         "allow_symbol_change": true,
         "container_id": "tradingview_0e27d"
     }
@@ -407,6 +408,7 @@ function changeSymbol(code) {
             "style": "1",
             "locale": "kr",
             "enable_publishing": false,
+            "hide_side_toolbar": false,
             "allow_symbol_change": true,
             "container_id": "tradingview_0e27d"
         }
