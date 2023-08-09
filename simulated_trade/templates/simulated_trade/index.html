@@ -39,7 +39,8 @@
   <!-- Moment -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
-
+  <!-- TradingView -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
   <!-- Helpers -->
   <script src="{% static 'assets/vendor/js/helpers.js' %} "></script>
@@ -160,9 +161,16 @@
             <div class="row">
               <div class="col-lg-8 mb-4 order-0">
                 <div class="card">
-                    <div class="d-flex align-items-end row">
-
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container">  
+                        <div id="tradingview_0e27d" style="height: 450px"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://kr.tradingview.com/" rel="noopener nofollow" target="_blank">
+                              <span class="blue-text">트레이딩뷰에서 모든 시장 추적</span>
+                            </a>
+                        </div>
                     </div>
+                    <!-- TradingView Widget END -->  
                 </div>
             </div>
             
