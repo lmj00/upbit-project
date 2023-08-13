@@ -296,47 +296,94 @@ socket.onmessage = function (e) {
             var code = document.getElementById(item.code);
 
             if (!code) {
-                var name = document.createElement('td');
-                name.setAttribute('id', item.code);
-                name.setAttribute('class', 'name');
-                name.textContent = item.name;
+                let tr = document.createElement('tr');
 
-                var price = document.createElement('td');
-                price.setAttribute('class', 'price');
-                price.textContent = item.trade_price;
+                let tdBookmark = document.createElement('td');
+                let sbookmark = document.createElement('span');
+                let abookmark = document.createElement('a');
+                sbookmark.setAttribute('class', 'bookmark');
+                abookmark.setAttribute('href', '#');
+                sbookmark.appendChild(abookmark);
+                tdBookmark.appendChild(sbookmark);
+
+                let cAlign = document.createElement('td');
+                cAlign.setAttribute('class', 'cAlign');
+
+                // tit
+                let tdTit = document.createElement('td');
+                let aTit = document.createElement('a');
+                let stTit = document.createElement('strong');
+                let emTit = document.createElement('em');
+                let sTit = document.createElement('span');
                 
-                var percent = document.createElement('td');
-                percent.setAttribute('class', 'percent');
+                let splitCode = item.code.split('-');
+
+                tdTit.setAttribute('id', item.code);
+                tdTit.setAttribute('class', 'tit');
+                aTit.setAttribute('href', '#');
+                stTit.textContent = item.name;
+                emTit.textContent = splitCode[1];
+                sTit.textContent = '/' + splitCode[0];
+
+                aTit.appendChild(stTit);
+                emTit.appendChild(sTit);
+                tdTit.appendChild(aTit);
+                tdTit.appendChild(emTit);
+
+                // price
+                let tdPrice = document.createElement('td');
+                let stPrice = document.createElement('strong');
+                let sPrice = document.createElement('span');
+                tdPrice.setAttribute('class', 'price');
+                sPrice.setAttribute('class', '');
+                stPrice.textContent = item.trade_price;
                 
-                var scpP = document.createElement('p');
-                var scpEm = document.createElement('em');
-                scpP.textContent = item.signed_change_rate;
-                scpEm.textContent = item.signed_change_price;
+                tdPrice.appendChild(stPrice);
+                tdPrice.appendChild(sPrice);
 
-                percent.appendChild(scpP);
-                percent.appendChild(scpEm);
+                // percent
+                let tdPercent = document.createElement('td');
+                let pPercent = document.createElement('p');
+                let emPercent = document.createElement('em');
+                tdPercent.setAttribute('class', 'percent');
+                pPercent.textContent = item.signed_change_rate;
+                emPercent.textContent = item.signed_change_price;
 
-                var atp24h = document.createElement('td');
-                atp24h.setAttribute('class', 'atp24h');
-                atp24h.textContent = parseInt((item.acc_trade_price_24h / 1_000_000)).toLocaleString() + '백만';
+                tdPercent.appendChild(pPercent);
+                tdPercent.appendChild(emPercent);
+                
+                // rAlign
+                let tdRightAlign = document.createElement('td');
+                let tdRightP = document.createElement('p');
+                let tdRightI = document.createElement('i');
+                tdRightAlign.setAttribute('class', 'rAlign');
+                tdRightP.textContent = parseInt((item.acc_trade_price_24h / 1_000_000)).toLocaleString();
+                tdRightI.textContent = '백만';
 
-                var row = document.createElement('tr');
-                row.appendChild(name);
-                row.appendChild(price);
-                row.appendChild(percent);
-                row.appendChild(atp24h);
+                tdRightP.appendChild(tdRightI);
+                tdRightAlign.appendChild(tdRightP);
+
+                tr.appendChild(tdBookmark);
+                tr.appendChild(cAlign);
+                tr.appendChild(tdTit);
+                tr.appendChild(tdPrice);
+                tr.appendChild(tdPercent);
+                tr.appendChild(tdRightAlign);
 
                 var tableBody = document.querySelector('#market_list tbody');
-                tableBody.appendChild(row);
+                tableBody.appendChild(tr);
             } else {
-                var price = code.nextElementSibling;
-                var percent = price.nextElementSibling;
-                var atp24h = percent.nextElementSibling;
+                let coin = document.getElementById(item.code);
+            
+                let sPrice = coin.nextElementSibling;
+                sPrice.querySelector('strong').innerHTML = item.trade_price;
                 
-                price.innerHTML = item.trade_price;
-                percent.querySelector('p').innerHTML = item.signed_change_rate;
-                percent.querySelector('em').innerHTML = item.signed_change_price;
-                atp24h.innerHTML = parseInt(item.acc_trade_price_24h / 1_000_000).toLocaleString() + '백만';
+                let pPercent = sPrice.nextElementSibling;
+                pPercent.querySelector('p').innerHTML = item.signed_change_rate;
+                pPercent.querySelector('em').innerHTML = item.signed_change_price;
+
+                let tdRightP = pPercent.nextElementSibling;
+                tdRightP.querySelector('p').innerHTML = parseInt((item.acc_trade_price_24h / 1_000_000)).toLocaleString() + '<i>백만</i>';
             }
         });
     } else if (data.type == 'sml_account_balance') {
