@@ -161,40 +161,62 @@
             <div class="row">
               <div class="col-lg-8 mb-4 order-0">
                 <div class="card">
-                    <!-- TradingView Widget BEGIN -->
-                    <div class="tradingview-widget-container">  
-                        <div id="tradingview_0e27d" style="height: 450px"></div>
-                        <div class="tradingview-widget-copyright">
-                            <a href="https://kr.tradingview.com/" rel="noopener nofollow" target="_blank">
-                              <span class="blue-text">트레이딩뷰에서 모든 시장 추적</span>
-                            </a>
-                        </div>
+                  <!-- TradingView Widget BEGIN -->
+                  <div class="tradingview-widget-container">
+                    <div id="tradingview_0e27d" style="height: 450px"></div>
+                    <div class="tradingview-widget-copyright">
+                      <a href="https://kr.tradingview.com/" rel="noopener nofollow" target="_blank">
+                        <span class="blue-text">트레이딩뷰에서 모든 시장 추적</span>
+                      </a>
                     </div>
-                    <!-- TradingView Widget END -->  
+                  </div>
+                  <!-- TradingView Widget END -->
                 </div>
-            </div>
-            
+              </div>
+
               <div class="col-lg-4 col-md-4 order-1">
                 <div class="row">
                   <div class="col-lg-6 col-md-12 col-6 mb-4">
                     <div class="card" style="width: 445px; height: 700px; overflow: auto;">
-                      <div class="card">
-                        <h5 class="card-header"></h5>
-                        <div class="table-responsive text-nowrap">
-                          <table id="market_list" class="table table-hover">
-                            <thead>
-                              <tr>
-                                <th>한글명</th>
-                                <th>현재가</th>
-                                <th>전일대비</th>
-                                <th>거래대금</th>
-                              </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+                      <h5 class="card-header"></h5>
+                      <table style="text-align: center;">
+                        <colgroup>
+                          <col width="26">
+                          <col width="26">
+                          <col width="94">
+                          <col width="88">
+                          <col width="78">
+                          <col width="*">
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <th colspan="3">
+                              <a href="#">한글명 </a>
+                            </th>
+                            <th>
+                              <a href="#">현재가 </a>
+                            </th>
+                            <th>
+                              <a href="#">전일대비 </a>
+                            </th>
+                            <th>
+                              <a href="#">거래대금 </a>
+                            </th>
+                          </tr>
+                        </thead>
+                      </table>
+                      <table id="market_list">
+                        <colgroup>
+                          <col width="26">
+                          <col width="26">
+                          <col width="94">
+                          <col width="98">
+                          <col width="58">
+                          <col width="*">
+                        </colgroup>
+                        <tbody>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
