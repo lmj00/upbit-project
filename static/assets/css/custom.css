@@ -1,0 +1,107 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, pre,
+a, abbr, acronym, cite, code, del, dfn, em, img, ins, q, s, samp, strike,
+strong, sub, sup, u, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, 
+caption, tbody, tfoot, thead, tr, th, td, embed {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+}
+
+body {
+    background: #fff;
+    color: #333;
+    font: normal 12px "Roboto","Noto Sans KR",sans-serif,"AppleSDGothicNeo-Regular","Malgun Gothic","Dotum",sans-serif;
+}
+
+table td {
+    height: 44px;
+    border-top: 1px solid #f1f1f4;
+    color: #333;
+    text-align: right;
+}
+
+td .bookmark {
+    display: block;
+    width: 12px;
+    height: 12px;
+}
+
+td .bookmark a {
+    display: block;
+    overflow: hidden;
+    width: 12px;
+    height: 12px;
+    text-indent: 999em;
+}
+
+td .cAligin {
+    padding: 0;
+    text-align: center;
+}
+
+td.tit {
+    text-align: left;
+}
+
+td.tit strong {
+    display: block;
+    margin: 2px 0 3px 0;
+    line-height: 1em;
+    font-family: "Roboto","Noto Sans KR","Dotum",돋움,"sans-serif",Arial,Helvetica;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+td.price {
+    padding-right: 4px;
+    vertical-align: top;
+}
+
+td.price strong {
+    display: block;
+    padding-top: 7px;
+    line-height: 1.5em;
+    font-weight: 500;
+}
+
+td.percent {
+    vertical-align: top;
+}
+
+td.percent p {
+    padding-top: 9px;
+}
+
+td.percent p+em {
+    display: block;
+    font-size: 11px;
+}
+
+td.percent+.rAlign {
+    vertical-align: top;
+}
+
+td.rAlign {
+    padding-right: 14px;
+    text-align: right;
+    word-break: keep-all;
+    word-wrap: break-word;
+}
+
+td.percent+.rAlign p {
+    padding-top: 9px;
+}
+
+td.rAlign p {
+    color: #333;
+    text-align: right;
+}
+
+td.rAlign p i { 
+    color: #999;
+    font-family: "Roboto","Noto Sans KR","Dotum",돋움,"sans-serif",Arial,Helvetica;
+    font-size: 11px;
+    letter-spacing: 0;
+}
