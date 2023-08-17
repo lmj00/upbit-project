@@ -21,12 +21,11 @@ const csrftoken = getCookie('csrftoken');
 var marketList = document.getElementById('market_list');
 
 marketList.addEventListener('click', function (event) {
-    var target = event.target;
-    var tr = target.closest('tr');
+    var tr = event.target.closest('tr'); 
 
-    var code = tr.querySelector('.name').id;
-    var coinName = tr.querySelector('.name').textContent;
-    var coinPrice = tr.querySelector('.price').textContent;
+    var code = tr.querySelector('.tit').id;
+    var coinName = tr.querySelector('.tit strong').textContent;
+    var coinPrice = tr.querySelector('.price strong').textContent;
 
     var inputName = document.getElementById('in_name');
     inputName.value = coinName;
