@@ -105,3 +105,292 @@ td.rAlign p i {
     font-size: 11px;
     letter-spacing: 0;
 }
+
+section.ty01 {
+    float: left;
+    width: 990px;
+    padding-top: 72px;
+}
+
+section article {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+
+.tab__list {
+    display: flex;
+}
+
+.tab__item {
+    flex: 1;
+}
+
+.tab__item__link {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 45px;
+    border-bottom: 1px solid #ddd;
+    line-height: 45px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.MyTrade {
+    height: 826px;
+}
+
+.TradeState__section--amount {
+    width: 590px;
+    padding: 25px 30px;
+}
+
+.TradeState__section {
+    float: left;
+    height: 212px;
+    box-sizing: border-box;
+}
+
+.TradeAmount {
+    margin-bottom: 28px;
+}
+
+.TradeAmount__row--total {
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.TradeAmount__row {
+    display: table;
+    float: left;
+    width: 236px;
+    margin-top: 12px;
+}
+
+.TradeAmount__TitleCell {
+    display: table-cell;
+}
+
+.TradeAmount__title {
+    font-size: 14px;
+    color: #666;
+}
+
+.TradeAmount__CountCell {
+    display: table-cell;
+    text-align: right;
+}
+
+.TradeAmount__count--total {
+    font-size: 20px;
+}
+
+.TradeAmount__count {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.TradeAmount__unit {
+    display: inline-block;
+    padding-left: 7px;
+    vertical-align: bottom;
+    font-size: 11px;
+    color: #999;
+}
+
+.TradeAmount__row:nth-child(even) {
+    padding-left: 50px;
+}
+
+.TradeGraph {
+    position: relative;
+    height: 100%;
+}
+
+.TradeState__section {
+    float: left;
+    height: 212px;
+    box-sizing: border-box;
+}
+
+.TradeState__section--graph {
+    width: 400px;
+    border-left: 1px solid #eee;
+}
+
+.TradeGraph__EmptyText {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+    box-sizing: border-box;
+}
+
+.AmountTable__Header {
+    border-top: 1px solid #eee;
+    display: flex;
+    height: 42px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.AmountTable__HeadTable, .AmountTable__BodyTable {
+    width: 100%;
+}
+
+.AmountTable__title {
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.AmountTable__option {
+    flex: 1;
+    text-align: right;
+}
+
+.AmountTable__option .chkB {
+    text-align: left;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.AmountTable__option .chkB a {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(https://cdn.upbit.com/upbit-web/images/bg.feb3506.png) -120px -50px no-repeat;
+    overflow: hidden;
+    text-indent: -999em;
+    vertical-align: middle;
+}
+
+.AmountTable__option .chkB label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.AmountTable__option .chkB__label {
+    font-size: 12px;
+    color: #333;
+}
+
+section article table {
+    width: 100%;
+}
+
+.AmountTable__HeadTable {
+    border-top: 1px solid #ddd;
+}
+
+section article table thead th {
+    height: 30px;
+    background-color: #f9fafc;
+    color: #666;
+    font-family: "Roboto","Noto Sans KR","Dotum",돋움,"sans-serif",Arial,Helvetica;
+    font-size: 11px;
+}
+
+section article table thead th a {
+    color: #666;
+}
+
+.AmountTable__HeadTable__wrap--nftInfoActive, .AmountTable__BodyTable__wrap--nftInfoActive {
+    height: 480px;
+    overflow: auto;
+}
+
+section article table .AmountTable__cell:first-child {
+    padding-left: 20px;
+}
+
+section article table td:first-child {
+    padding-left: 14px;
+    text-align: inherit;
+}
+
+section article table .AmountTable__cell {
+    height: auto;
+}
+
+.AmountTable__logo {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    width: 26px;
+    height: 26px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.AmountTable__name {
+    padding-left: 42px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.AmountTable__SubName {
+    padding-top: 6px;
+    font-size: 11px;
+    color: #666;
+    font-weight: 400;
+}
+
+.AmountTable__count:first-child, .AmountTable__calculate:first-child {
+    padding-top: 0;
+}
+
+.AmountTable__count, .AmountTable__calculate {
+    padding-top: 3px;
+    font-size: 14px;
+    word-break: keep-all;
+    word-wrap: break-word;
+    text-align: right;
+}
+
+.AmountTable__unit {
+    display: inline-block;
+    padding-left: 2px;
+    font-size: 11px;
+    color: #999;
+    font-weight: 400;
+}
+
+.AmountTable__cell--BetweenSpace7 {
+    padding: 15px 7px;
+}
+
+.AmountTable__cell.selected {
+    background-color: #f7f8fb;
+    font-weight: 600;
+}
+
+.AmountTable__OrderBtn {
+    display: inline-block;
+    min-width: 60px;
+    line-height: 26px;
+    padding: 0 10px 0 10px;
+    background: #fff;
+    border: 1px solid #d2d3d7;
+    border-radius: 2px;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
