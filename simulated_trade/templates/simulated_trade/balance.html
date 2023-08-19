@@ -132,199 +132,53 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-
-                    <div class="row" style="margin: 0px auto;">
-                        <div>
-                            <section class="ty01">
-                                <article>
-                                    <div class="sort-tabMenu__type02">
-                                        <div class="tab__list">
-                                            <div class="tab__item"><a class="tab__item__link tab__item__link--active"
-                                                    title="보유자산" href="/investments/balance">보유자산</a></div>
-                                            <div class="tab__item"><a class="tab__item__link" title="거래내역"
-                                                    href="/investments/history">거래내역</a></div>
-                                        </div>
-                                    </div>
-                                    <div class="MyTrade">
-                                        <div class="MyTrade__TradeState TradeState">
-                                            <div class="TradeState__section TradeState__section--amount">
-                                                <div class="TradeAmount">
-                                                    <dl class="TradeAmount__row TradeAmount__row--total">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">보유 KRW</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count TradeAmount__count--total">0<i
-                                                                    class="TradeAmount__unit">KRW</i></span></dd>
-                                                    </dl>
-                                                    <dl class="TradeAmount__row TradeAmount__row--total">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">총 보유자산</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count TradeAmount__count--total">0<i
-                                                                    class="TradeAmount__unit">KRW</i></span></dd>
-                                                    </dl>
-                                                    <dl class="TradeAmount__row">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">총매수금액</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count">1<i
-                                                                    class="TradeAmount__unit">KRW</i></span></dd>
-                                                    </dl>
-                                                    <dl class="TradeAmount__row">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">총평가손익</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count TradeAmount__count--increase">0<i
-                                                                    class="TradeAmount__unit">KRW</i></span></dd>
-                                                    </dl>
-                                                    <dl class="TradeAmount__row">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">총평가금액</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count">0<i
-                                                                    class="TradeAmount__unit">KRW</i></span></dd>
-                                                    </dl>
-                                                    <dl class="TradeAmount__row">
-                                                        <dt class="TradeAmount__TitleCell"><span
-                                                                class="TradeAmount__title">총평가수익률</span></dt>
-                                                        <dd class="TradeAmount__CountCell"><span
-                                                                class="TradeAmount__count TradeAmount__count--increase">+4.44<i
-                                                                    class="TradeAmount__unit">%</i></span></dd>
-                                                    </dl>
-                                                </div>
-
-                                            </div>
-                                            <div class="TradeState__section TradeState__section--graph">
-                                                <div class="TradeGraph">
-                                                    <div class="TradeGraph__EmptyText">보유자산 비중 그래프가 제공됩니다.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="AmontTable">
-                                            <div class="AmountTable__Header">
-                                                <h5 class="AmountTable__title">보유자산 목록</h5>
-                                                <div class="AmountTable__option"><span class="chkB"><a href="#"
-                                                            class="">checkbox</a><label class="chkB__label"
-                                                            for="">거래미지원/소액 자산 숨기기 <em class="chkB__subTxt">(평가금액 1만원
-                                                                미만)</em></label></span></div>
-                                            </div>
-                                            <table class="AmountTable__HeadTable">
-                                                <colgroup>
-                                                    <col width="*">
-                                                    <col width="140">
-                                                    <col width="140">
-                                                    <col width="140">
-                                                    <col width="140">
-                                                    <col width="135">
-                                                    <col width="100">
-                                                </colgroup>
-                                                <thead style="text-align: center;">
-                                                    <tr>
-                                                        <th>보유자산</th>
-                                                        <th>보유수량</th>
-                                                        <th class="AmountTable__HeadTitle">
-                                                            <a href="#" class="">매수평균가</a>
-                                                        </th>
-                                                        <th class="AmountTable__HeadTitle">
-                                                            <a href="#" class="">매수금액</a>
-                                                        </th>
-                                                        <th class="AmountTable__HeadTitle">
-                                                            <a href="#" class="selected">평가금액</a>
-                                                        </th>
-                                                        <th class="AmountTable__HeadTitle">
-                                                            <a href="#" class="">평가손익(%)</a>
-                                                        </th>
-                                                        <th>&nbsp;</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                            <div
-                                                style="position: relative; overflow: hidden; width: 100%; height: 540px;">
-                                                <div
-                                                    style="position: absolute; inset: 0px; overflow: scroll; margin-right: -17px; margin-bottom: -17px;">
-                                                    <div
-                                                        class="AmountTable__BodyTable__wrap AmountTable__BodyTable__wrap--nftInfoActive">
-                                                        <table class="AmountTable__BodyTable">
-                                                            <colgroup>
-                                                                <col width="*">
-                                                                <col width="140">
-                                                                <col width="140">
-                                                                <col width="140">
-                                                                <col width="140">
-                                                                <col width="135">
-                                                                <col width="100">
-                                                            </colgroup>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="AmountTable__cell">
-                                                                        <div class="AmountTable__logo">
-                                                                        </div>
-                                                                        <div class="AmountTable__name">트론<div
-                                                                                class="AmountTable__SubName">TRX</div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td
-                                                                        class="AmountTable__cell AmountTable__cell--BetweenSpace7">
-                                                                        <div class="AmountTable__count">0.00000057<i
-                                                                                class="AmountTable__unit">TRX</i></div>
-                                                                    </td>
-                                                                    <td
-                                                                        class="AmountTable__cell AmountTable__cell--BetweenSpace7">
-                                                                        <div class="AmountTable__count">96.71<i
-                                                                                class="AmountTable__unit">KRW</i></div>
-                                                                        <!-- <a href="" class="AmountTable__modify">수정</a> -->
-                                                                    </td>
-                                                                    <td
-                                                                        class="AmountTable__cell AmountTable__cell--BetweenSpace7">
-                                                                        <div class="AmountTable__count">1<i
-                                                                                class="AmountTable__unit">KRW</i></div>
-                                                                    </td>
-                                                                    <td
-                                                                        class="AmountTable__cell AmountTable__cell--BetweenSpace7 selected">
-                                                                        <div class="AmountTable__count">0<i
-                                                                                class="AmountTable__unit">KRW</i></div>
-                                                                    </td>
-                                                                    <td class="AmountTable__cell">
-                                                                        <div
-                                                                            class="AmountTable__calculate AmountTable__calculate--increase">
-                                                                            +4.44 <i class="AmountTable__unit">%</i>
-                                                                        </div>
-                                                                        <div
-                                                                            class="AmountTable__calculate AmountTable__calculate--increase">
-                                                                            +0 <i class="AmountTable__unit">KRW</i>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td
-                                                                        class="AmountTable__cell AmountTable__cell--middle">
-                                                                        <button class="AmountTable__OrderBtn"
-                                                                            title="주문">주문</button>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style="position: absolute; height: 6px; right: 2px; bottom: 2px; left: 2px; border-radius: 3px;">
-                                                    <div
-                                                        style="position: relative; display: block; height: 100%; cursor: pointer; border-radius: inherit; background-color: rgba(0, 0, 0, 0.2); width: 0px;">
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style="position: absolute; width: 6px; right: 2px; bottom: 2px; top: 2px; border-radius: 3px;">
-                                                    <div
-                                                        style="position: relative; display: block; width: 100%; cursor: pointer; border-radius: inherit; background-color: rgba(0, 0, 0, 0.2); height: 0px;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </section>
+                    <div class="TradeContainer">
+                        <div class="TradeSummary">
+                            <div class="TradeItem">
+                                <div class="TradeTitle">보유 KRW</div>
+                                <div class="TradeValue TradeValue--total">0 KRW</div>
+                            </div>
+                            <div class="TradeItem">
+                                <div class="TradeTitle">총 보유자산</div>
+                                <div class="TradeValue">0 KRW</div>
+                            </div>
+                            <div class="TradeItem">
+                                <div class="TradeTitle">총매수금액</div>
+                                <div class="TradeValue">1 KRW</div>
+                            </div>
+                            <div class="TradeItem">
+                                <div class="TradeTitle">총평가손익</div>
+                                <div class="TradeValue TradeValue--increase">0 KRW</div>
+                            </div>
+                            <div class="TradeItem">
+                                <div class="TradeTitle">총평가금액</div>
+                                <div class="TradeValue">0 KRW</div>
+                            </div>
+                            <div class="TradeItem">
+                                <div class="TradeTitle">총평가수익률</div>
+                                <div class="TradeValue TradeValue--increase">+4.44%</div>
+                            </div>
                         </div>
 
+                        <div class="CoinTable">
+                            <div class="CoinHeaderRow">
+                                <div class="CoinTitle">보유코인</div>
+                                <div class="CoinTitle">보유수량</div>
+                                <div class="CoinTitle">매수평균가</div>
+                                <div class="CoinTitle">매수금액</div>
+                                <div class="CoinTitle">평가금액</div>
+                                <div class="CoinTitle">평가손익</div>
+                            </div>
+                            <div class="CoinRow">
+                                <div class="CoinValue">BTC</div>
+                                <div class="CoinValue">1.5</div>
+                                <div class="CoinValue">45,000,000 KRW</div>
+                                <div class="CoinValue">67,500,000 KRW</div>
+                                <div class="CoinValue">80,000,000 KRW</div>
+                                <div class="CoinValue Increase">+12,500,000 KRW</div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- / Content -->
 
                     <!-- Footer -->
                     <footer class="content-footer footer bg-footer-theme">
@@ -378,6 +232,8 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
+    <!-- Account JS-->
+    <script src="{% static 'simulated_trade/js/account.js' %}"></script>
 </body>
 
 </html>
