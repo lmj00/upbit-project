@@ -36,22 +36,26 @@ accountSocket.onmessage = function (e) {
         tradeValueElements[5].textContent = acbValue.rate_of_return;
 
     } else if (data.type == 'sml_account') {
-        const tableBody2 = document.getElementById('t-body2');
-        let tableHTML2 = '';
+        const coinTable = document.querySelector('.CoinTable');
+        const coinHeaderRow = coinTable.querySelector('.CoinHeaderRow');
 
-        data.value.forEach(item => {
-            tableHTML2 += `
-                <tr style="border-bottom: 1px solid #ccc;">
-                    <td>${item.name}</td>
-                    <td>${item.balance}</td>
-                    <td>${item.avg_buy_price}</td>
-                    <td>${item.amount_money}</td>
-                    <td>${item.valuation_amount}</td>
-                    <td>${item.rate_of_return}</td>
-                </tr>
+        const existingCoinRows = coinTable.querySelectorAll('.CoinRow');
+        existingCoinRows.forEach(row => row.remove());
+
+        data.value.forEach(coin => {
+            const coinRow = document.createElement('div');
+            coinRow.classList.add('CoinRow');
+
+            coinRow.innerHTML = `
+                <div class="CoinValue">${coin.name}</div>
+                <div class="CoinValue">${coin.balance}</div>
+                <div class="CoinValue">${coin.avg_buy_price}</div>
+                <div class="CoinValue">${coin.amount_money}</div>
+                <div class="CoinValue">${coin.valuation_amount}</div>
+                <div class="CoinValue">${coin.rate_of_return}</div>
             `;
-        });
 
-        tableBody2.innerHTML = tableHTML2;
+            coinHeaderRow.insertAdjacentElement('afterend', coinRow);
+        });
     }
 }
