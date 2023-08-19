@@ -14,7 +14,7 @@ def index(request):
     return render(request, 'simulated_trade/index.html')
 
 
-def checkTickSize(price):
+def check_tick_size(price):
     if price >= 2_000_000:
         return 1000
     
@@ -64,7 +64,7 @@ def order_bid(request):
     buy_price = float(json_obj['in_price'])
     buy_total = buy_quantity * buy_price
     
-    cts = checkTickSize(buy_price)
+    cts = check_tick_size(buy_price)
 
     message = ''
     
@@ -132,7 +132,7 @@ def order_ask(request):
     )
 
     ac_coin = qs.first()
-    cts = checkTickSize(sell_price)
+    cts = check_tick_size(sell_price)
     message = ''
 
     try:
@@ -188,7 +188,7 @@ def get_history(request, code):
         else:
             side = '매도'
 
-        cts_price = checkTickSize(hs.price)
+        cts_price = check_tick_size(hs.price)
 
         if cts_price < 1:
             point = str(cts_price).split()[-1]    
