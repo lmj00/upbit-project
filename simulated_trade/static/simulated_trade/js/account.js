@@ -25,22 +25,15 @@ accountSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
 
     if (data.type == 'sml_account_balance') {
-        const tableBody = document.getElementById('t-body');
-        const ac_dic = data.value;
+        const acbValue = data.value;
+        const tradeValueElements = document.querySelectorAll('.TradeValue');
 
-        let tableHTML = '';
-        tableHTML += `
-            <tr>
-                <td>${ac_dic.holding_krw}</td>
-                <td>${ac_dic.total_assets}</td>
-                <td>${ac_dic.total_purchase}</td>
-                <td>${ac_dic.profit_or_loss}</td>
-                <td>${ac_dic.total_evaluation}</td>
-                <td>${ac_dic.rate_of_return}</td>
-            </tr>
-            `;
-
-        tableBody.innerHTML = tableHTML;
+        tradeValueElements[0].textContent = acbValue.holding_krw;
+        tradeValueElements[1].textContent = acbValue.total_assets;
+        tradeValueElements[2].textContent = acbValue.total_purchase;
+        tradeValueElements[3].textContent = acbValue.profit_or_loss;
+        tradeValueElements[4].textContent = acbValue.total_evaluation;
+        tradeValueElements[5].textContent = acbValue.rate_of_return;
 
     } else if (data.type == 'sml_account') {
         const tableBody2 = document.getElementById('t-body2');
@@ -60,6 +53,5 @@ accountSocket.onmessage = function (e) {
         });
 
         tableBody2.innerHTML = tableHTML2;
-
     }
 }
