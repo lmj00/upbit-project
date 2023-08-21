@@ -28,12 +28,12 @@ accountSocket.onmessage = function (e) {
         const acbValue = data.value;
         const tradeValueElements = document.querySelectorAll('.TradeValue');
 
-        tradeValueElements[0].textContent = acbValue.holding_krw;
-        tradeValueElements[1].textContent = acbValue.total_assets;
-        tradeValueElements[2].textContent = acbValue.total_purchase;
-        tradeValueElements[3].textContent = acbValue.profit_or_loss;
-        tradeValueElements[4].textContent = acbValue.total_evaluation;
-        tradeValueElements[5].textContent = acbValue.rate_of_return;
+        tradeValueElements[0].textContent = acbValue.holding_krw.toLocaleString();
+        tradeValueElements[1].textContent = acbValue.total_assets.toLocaleString();
+        tradeValueElements[2].textContent = acbValue.total_purchase.toLocaleString();
+        tradeValueElements[3].textContent = acbValue.profit_or_loss.toLocaleString();
+        tradeValueElements[4].textContent = acbValue.total_evaluation.toLocaleString();
+        tradeValueElements[5].textContent = acbValue.rate_of_return.toLocaleString();
 
     } else if (data.type == 'sml_account') {
         const coinTable = document.querySelector('.CoinTable');
@@ -48,11 +48,11 @@ accountSocket.onmessage = function (e) {
 
             coinRow.innerHTML = `
                 <div class="CoinValue">${coin.name}</div>
-                <div class="CoinValue">${coin.balance}</div>
-                <div class="CoinValue">${coin.avg_buy_price}</div>
-                <div class="CoinValue">${coin.amount_money}</div>
-                <div class="CoinValue">${coin.valuation_amount}</div>
-                <div class="CoinValue">${coin.rate_of_return}</div>
+                <div class="CoinValue">${coin.balance.toLocaleString()}</div>
+                <div class="CoinValue">${coin.avg_buy_price.toLocaleString()}</div>
+                <div class="CoinValue">${coin.amount_money.toLocaleString()}</div>
+                <div class="CoinValue">${coin.valuation_amount.toLocaleString()}</div>
+                <div class="CoinValue">${coin.rate_of_return.toLocaleString()}</div>
             `;
 
             coinHeaderRow.insertAdjacentElement('afterend', coinRow);
