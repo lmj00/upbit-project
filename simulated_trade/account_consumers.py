@@ -60,16 +60,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
     async def send_account_balance(self):
         ac_obj = Account.objects.all()
         gcs = None
-
-        ac_dic = {
-            'holding_krw':ac_obj.get(currency='KRW').balance,
-            'total_assets': 0,
-            'total_purchase': 0,
-            'total_evaluation': 0,
-            'profit_or_loss': 0,
-            'rate_of_return': 0
-        }
         
+        holding_krw = ac_obj.get(currency='KRW').balance
+        total_purchase = total_evaluation = total_assets = 0
+
         for coin in ac_obj:
             code = coin.unit_currency + "-" + coin.currency
 
@@ -80,13 +74,21 @@ class AccountConsumer(AsyncWebsocketConsumer):
                     if code == tqs.code:
                         gcs = tqs
 
-                ac_dic['total_purchase'] += coin.avg_buy_price * coin.balance
-                ac_dic['total_evaluation'] += (coin.avg_buy_price * coin.balance) + (gcs.trade_price - coin.avg_buy_price) * coin.balance
+                total_purchase += coin.avg_buy_price * coin.balance
+                total_evaluation += (coin.avg_buy_price * coin.balance) + (gcs.trade_price - coin.avg_buy_price) * coin.balance
 
-        ac_dic['profit_or_loss'] = ac_dic['total_evaluation'] - ac_dic['total_purchase']
-        ac_dic['total_assets'] += ac_dic['holding_krw'] + ac_dic['total_evaluation']
-        ac_dic['rate_of_return'] = round((ac_dic['total_evaluation'] - ac_dic['total_purchase']) / ac_dic['total_purchase'] * 100, 2)
-                
+        profit_or_loss = total_evaluation - total_purchase
+        total_assets += holding_krw + total_evaluation
+        rate_of_return = round((total_evaluation - total_purchase) / total_purchase * 100, 2)
+
+        ac_dic = {
+            'holding_krw': int(holding_krw),
+            'total_assets': int(total_assets),
+            'total_purchase': int(total_purchase),
+            'total_evaluation': int(total_evaluation),
+            'profit_or_loss': int(profit_or_loss),
+            'rate_of_return': rate_of_return
+        }
 
         await self.send(text_data=json.dumps({
             "type": "sml_account_balance",
