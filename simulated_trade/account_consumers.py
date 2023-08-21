@@ -44,10 +44,10 @@ class AccountConsumer(AsyncWebsocketConsumer):
 
                 dic['name'] = gcs.name
                 dic['balance'] = coin.balance
-                dic['avg_buy_price'] = coin.avg_buy_price
-                dic['amount_money'] = amount_money
+                dic['avg_buy_price'] = int(coin.avg_buy_price)
+                dic['amount_money'] = int(amount_money)
+                dic['valuation_amount'] = int(valuation_amount)
                 dic['rate_of_return'] = rate_of_return
-                dic['valuation_amount'] = valuation_amount
 
                 sml_account_ls.append(dic)
 
