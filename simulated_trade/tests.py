@@ -74,3 +74,15 @@ class TestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(message, '매도주문이 완료되었습니다.')
+
+
+class BookmarkViewTestCase(TestCase):
+    def test_즐겨찾기_없을때(self):
+        url = reverse('check-bookmark', kwargs={'code': 'KRW-BTC'})
+        
+        response = self.client.post(
+            url,
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
