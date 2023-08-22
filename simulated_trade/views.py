@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from .models import Account, History
+from .models import Account, History, Bookmark
 from coin.coin import get_kr_name_dic
 
 from decimal import Decimal
@@ -210,3 +210,14 @@ def get_history(request, code):
         response_data.append(obj)
 
     return JsonResponse({'history': response_data})
+
+
+def check_bookmark(request, code):
+    has_bookmark = Bookmark.objects.filter(market=code).exists()
+
+    if not has_bookmark:
+        Bookmark.objects.create(market=code)
+    else:
+        Bookmark.objects.filter(market=code).delete()
+
+    return JsonResponse({'status': 200})
