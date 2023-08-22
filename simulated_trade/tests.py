@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from .models import Account
+from .models import Account, Bookmark
 
 import json
 
@@ -86,3 +86,17 @@ class BookmarkViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+
+
+    def test_즐겨찾기_있을때(self):
+        Bookmark.objects.create(market='KRW-BTC')
+
+        url = reverse('check-bookmark', kwargs={'code': 'KRW-BTC'})
+        
+        response = self.client.post(
+            url,
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Bookmark.objects.count(), 1)
