@@ -99,4 +99,4 @@ class BookmarkViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Bookmark.objects.count(), 1)
+        self.assertEqual(Bookmark.objects.count(), 0)
