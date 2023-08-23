@@ -22,20 +22,6 @@ table td {
     text-align: right;
 }
 
-td .bookmark {
-    display: block;
-    width: 12px;
-    height: 12px;
-}
-
-td .bookmark a {
-    display: block;
-    overflow: hidden;
-    width: 12px;
-    height: 12px;
-    text-indent: 999em;
-}
-
 td .cAligin {
     padding: 0;
     text-align: center;
@@ -109,12 +95,15 @@ td.rAlign p i {
 
 /* TradeTable */
 .TradeContainer {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    table-layout: fixed;
+    min-width: 900px;
+    max-width: 900px;
 }
 
 .TradeSummary {
@@ -148,6 +137,11 @@ td.rAlign p i {
 
 .TradeValue--increase {
     color: green;
+}
+
+
+.TradeContainer {
+    table-layout: fixed;
 }
 
 
@@ -187,4 +181,17 @@ td.rAlign p i {
 
 .CoinValue.Increase {
     color: green;
+}
+
+
+/* Bookmark */
+.bookmark-icon {
+    color: #E5E5E5;
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.bookmarked {
+    color: gold;
 }
