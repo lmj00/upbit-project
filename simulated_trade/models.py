@@ -16,3 +16,7 @@ class History(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     volume = models.DecimalField(max_digits=60, decimal_places=20, default=Decimal('0.0'))
     paid_fee = models.DecimalField(max_digits=40, decimal_places=20, default=Decimal('0.0'))
+
+
+class Bookmark(models.Model):
+    market = models.CharField(max_length=20)
