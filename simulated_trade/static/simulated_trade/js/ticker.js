@@ -22,7 +22,6 @@ var marketList = document.getElementById('market_list');
 
 marketList.addEventListener('click', function (event) {
     var tr = event.target.closest('tr');
-
     var code = tr.querySelector('.tit').id;
     var coinName = tr.querySelector('.tit strong').textContent;
     var coinPrice = tr.querySelector('.price strong').textContent;
@@ -32,6 +31,25 @@ marketList.addEventListener('click', function (event) {
 
     var inputPrice = document.getElementById('in_price');
     inputPrice.value = parseFloat(coinPrice);
+
+
+    // 즐겨찾기
+    const bookmarkContainer = event.target.closest('.bookmark');
+    
+    if (bookmarkContainer) {
+        const bookmarkLink = bookmarkContainer.querySelector('.bookmark-icon');
+        bookmarkLink.classList.toggle('bookmarked');
+
+        fetch('bookmark/' + code, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+        }) 
+
+        return;
+    }
 
 
     // 차트
@@ -302,8 +320,11 @@ tickerSocket.onmessage = function (e) {
                 let abookmark = document.createElement('a');
                 sbookmark.setAttribute('class', 'bookmark');
                 abookmark.setAttribute('href', '#');
+                abookmark.textContent = '★';
+                abookmark.className = 'bookmark-icon';
                 sbookmark.appendChild(abookmark);
                 tdBookmark.appendChild(sbookmark);
+                tr.appendChild(tdBookmark);
 
                 let cAlign = document.createElement('td');
                 cAlign.setAttribute('class', 'cAlign');
