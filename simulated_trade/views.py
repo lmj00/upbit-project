@@ -1,20 +1,21 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.db import transaction
 
 from .models import Account, History, Bookmark
 from coin.coin import get_kr_name_dic
 
 from decimal import Decimal
+from typing import Union
+
 import json
 
 
-# Create your views here.
-def index(request):
+def index(request: HttpRequest):
     return render(request, 'simulated_trade/index.html')
 
 
-def check_tick_size(price):
+def check_tick_size(price: float) -> Union[int, float]:
     if price >= 2_000_000:
         return 1000
     
@@ -50,7 +51,7 @@ def check_tick_size(price):
 
 
 @transaction.atomic
-def order_bid(request):  
+def order_bid(request: HttpRequest) -> JsonResponse:  
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
 
@@ -113,7 +114,7 @@ def order_bid(request):
 
 
 @transaction.atomic
-def order_ask(request):
+def order_ask(request: HttpRequest) -> JsonResponse:
     json_obj = json.loads(request.body)    
     reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
 
@@ -178,7 +179,7 @@ def order_ask(request):
     return JsonResponse(reponse_data)
 
 
-def get_history(request, code):
+def get_history(request: HttpRequest, code: str) -> JsonResponse:
     history = History.objects.filter(market=code)
     response_data = []
     
@@ -212,7 +213,7 @@ def get_history(request, code):
     return JsonResponse({'history': response_data})
 
 
-def check_bookmark(request, code):
+def check_bookmark(request: HttpRequest, code: str) -> JsonResponse:
     has_bookmark = Bookmark.objects.filter(market=code).exists()
 
     if not has_bookmark:
