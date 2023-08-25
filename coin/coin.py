@@ -1,5 +1,6 @@
 from coin.models import Ticker
 from django.db import transaction
+from typing import List, Dict, Any
 
 import websockets
 import json 
@@ -15,8 +16,8 @@ headers = {"accept": "application/json"}
 response = requests.get(url, headers=headers)
 
 
-def get_krw_codes_list():
-    krw_codes = []
+def get_krw_codes_list() -> List[str]:
+    krw_codes = [] 
 
     for res in response.json():
         market = res['market']
@@ -27,7 +28,7 @@ def get_krw_codes_list():
     return krw_codes
 
 
-def get_kr_name_dic():
+def get_kr_name_dic() -> Dict[str, str]:
     kr_name_dic = {}
 
     for res in response.json():
@@ -40,7 +41,7 @@ def get_kr_name_dic():
 
 
 @transaction.atomic
-async def get_ticker():
+async def get_ticker() -> None:
     async with websockets.connect('wss://api.upbit.com/websocket/v1') as websocket:
         request_ticker = [
             {"ticket":"ticket"},
@@ -66,7 +67,8 @@ async def get_ticker():
 
         Ticker.objects.bulk_create(tickers)
 
-def get_top_trade_price_coin():
+
+def get_top_trade_price_coin() -> List[Ticker]:
     length = len(get_krw_codes_list()) 
     ticker_list = Ticker.objects.order_by('-id')[:length]
     coin_list = []
@@ -80,7 +82,7 @@ def get_top_trade_price_coin():
     return coin_list
 
 
-def get_top_trade_volume_coin():
+def get_top_trade_volume_coin() -> Ticker:
     dic = {}
 
     for coin in get_top_trade_price_coin():
@@ -91,7 +93,7 @@ def get_top_trade_volume_coin():
     return top_trade_volume_coin
 
 
-def get_coin_snapshot(code):
+def get_coin_snapshot(code: str) -> Dict[str, Any]:
     url = "https://api.upbit.com/v1/ticker?markets=" + code
 
     headers = {"accept": "application/json"}
