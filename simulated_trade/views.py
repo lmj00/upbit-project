@@ -61,17 +61,18 @@ def order_bid(request: HttpRequest) -> JsonResponse:
     kr_name = json_obj['in_name']
     code = reversed_dic[kr_name].split('-')
 
-    buy_quantity = float(json_obj['in_quantity'])
-    buy_price = float(json_obj['in_price'])
+    buy_quantity = Decimal(json_obj['in_quantity'])
+    buy_price = Decimal(json_obj['in_price'])
     buy_total = buy_quantity * buy_price
-    
+    buy_fee = buy_total * Decimal(0.0005)
+
     cts = check_tick_size(buy_price)
 
     message = ''
     
     if Decimal(str(buy_price)) % Decimal(str(cts)) != 0:
         message = f'주문가격은 {cts}KRW 단위로 입력 부탁드립니다.'
-    elif krw_balance < buy_total + (buy_total * 0.0005):
+    elif krw_balance < buy_total + buy_fee:
         message = '주문가능 금액이 부족합니다.' 
     elif buy_total < 5000:
         message = '최소 주문금액은 5000KRW입니다.'
@@ -84,8 +85,8 @@ def order_bid(request: HttpRequest) -> JsonResponse:
                 'avg_buy_price' : buy_price
             }
         )   
-        
-        krw_balance_obj.balance -= buy_total + (buy_total * 0.0005) 
+
+        krw_balance_obj.balance -= buy_total + buy_fee
         krw_balance_obj.save()
 
         if created == False:
@@ -99,7 +100,7 @@ def order_bid(request: HttpRequest) -> JsonResponse:
             market = code[0] + '-' + code[1],
             price = buy_price,
             volume = buy_quantity,
-            paid_fee = buy_total * 0.0005
+            paid_fee = buy_fee
         )
 
         message = '매수주문이 완료되었습니다.'
