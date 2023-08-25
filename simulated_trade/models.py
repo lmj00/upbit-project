@@ -4,8 +4,8 @@ from decimal import Decimal
 # Create your models here.
 class Account(models.Model):
     currency = models.CharField(max_length=20)
-    balance = models.FloatField()
-    avg_buy_price = models.FloatField()
+    balance = models.DecimalField(max_digits=40, decimal_places=20, default=Decimal('0.0'))
+    avg_buy_price = models.DecimalField(max_digits=40, decimal_places=20, default=Decimal('0.0'))
     unit_currency = models.CharField(max_length=5)
 
 
