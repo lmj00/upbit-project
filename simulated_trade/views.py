@@ -124,8 +124,8 @@ def order_ask(request: HttpRequest) -> JsonResponse:
 
     currency = code[1]
     unit_currency = code[0]
-    sell_balance = float(json_obj['in_quantity'])
-    sell_price = float(json_obj['in_price'])
+    sell_balance = Decimal(json_obj['in_quantity'])
+    sell_price = Decimal(json_obj['in_price'])
     sell_total = sell_balance * sell_price
 
     qs = Account.objects.filter(
@@ -147,8 +147,8 @@ def order_ask(request: HttpRequest) -> JsonResponse:
         elif sell_total < 5000:
             message = '최소 주문금액은 5000KRW입니다.'
         else:
-            krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
-            total_krw = krw - (krw * 0.0005)
+            sell_krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
+            sell_fee = sell_krw * Decimal(0.0005)
 
             if sell_balance < ac_coin.balance:
                 Account.objects.filter(id=ac_coin.id).update(
@@ -158,14 +158,13 @@ def order_ask(request: HttpRequest) -> JsonResponse:
                 Account.objects.get(id=ac_coin.id).delete()
 
             krw_account = Account.objects.get(currency='KRW')
-            Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + total_krw)
-
+            Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + sell_krw - sell_fee)
             History.objects.create(
                 side = 'ask',
                 market = code[0] + '-' + code[1],
                 price = sell_price,
                 volume = sell_balance,
-                paid_fee = sell_total * 0.0005
+                paid_fee = sell_fee
             )
 
             message = '매도주문이 완료되었습니다.'
