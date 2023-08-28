@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 from django.db import transaction
+from django.db.models.query import QuerySet
 
 from .models import Account, History, Bookmark
 from coin.coin import get_kr_name_dic
 
+from typing import Optional, Union, Tuple, Dict, List, Any
 from decimal import Decimal
-from typing import Union
 
 import json
 
@@ -52,23 +53,26 @@ def check_tick_size(price: float) -> Union[int, float]:
 
 @transaction.atomic
 def order_bid(request: HttpRequest) -> JsonResponse:  
-    json_obj = json.loads(request.body)    
-    reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
+    json_obj: Dict[str, str] = json.loads(request.body)
+    reversed_dic: Dict[str, str] = {v: k for k, v in get_kr_name_dic().items()}
 
-    krw_balance_obj = Account.objects.get(currency='KRW')
-    krw_balance = krw_balance_obj.balance
+    krw_account: Account = Account.objects.get(currency='KRW')
+    krw_balance: Decimal = krw_account.balance
 
-    kr_name = json_obj['in_name']
-    code = reversed_dic[kr_name].split('-')
+    kr_name: str = json_obj['in_name']
+    code: List[str] = reversed_dic[kr_name].split('-')
 
-    buy_quantity = Decimal(json_obj['in_quantity'])
-    buy_price = Decimal(json_obj['in_price'])
-    buy_total = buy_quantity * buy_price
-    buy_fee = buy_total * Decimal(0.0005)
+    currency: str = code[1]
+    unit_currency: str = code[0]
 
-    cts = check_tick_size(buy_price)
+    buy_quantity: Decimal = Decimal(json_obj['in_quantity'])
+    buy_price: Decimal = Decimal(json_obj['in_price'])
+    buy_total: Decimal = buy_quantity * buy_price
+    buy_fee: Decimal = buy_total * Decimal(0.0005)
 
-    message = ''
+    cts: Union[int, float] = check_tick_size(buy_price)
+
+    message: str = ''
     
     if Decimal(str(buy_price)) % Decimal(str(cts)) != 0:
         message = f'주문가격은 {cts}KRW 단위로 입력 부탁드립니다.'
@@ -77,17 +81,20 @@ def order_bid(request: HttpRequest) -> JsonResponse:
     elif buy_total < 5000:
         message = '최소 주문금액은 5000KRW입니다.'
     else:
+        obj: Account
+        created: bool
+
         obj, created = Account.objects.get_or_create(
-            currency = code[1],
-            unit_currency = code[0],
+            currency = currency,
+            unit_currency = unit_currency,
             defaults = {
                 'balance': buy_quantity,
                 'avg_buy_price' : buy_price
             }
         )   
 
-        krw_balance_obj.balance -= buy_total + buy_fee
-        krw_balance_obj.save()
+        krw_account.balance -= buy_total + buy_fee
+        krw_account.save()
 
         if created == False:
             Account.objects.filter(id=obj.id).update(
@@ -97,7 +104,7 @@ def order_bid(request: HttpRequest) -> JsonResponse:
 
         History.objects.create(
             side = 'bid',
-            market = code[0] + '-' + code[1],
+            market = unit_currency + '-' + currency,
             price = buy_price,
             volume = buy_quantity,
             paid_fee = buy_fee
@@ -116,26 +123,27 @@ def order_bid(request: HttpRequest) -> JsonResponse:
 
 @transaction.atomic
 def order_ask(request: HttpRequest) -> JsonResponse:
-    json_obj = json.loads(request.body)    
-    reversed_dic = {v: k for k, v in get_kr_name_dic().items()}
+    json_obj: Dict[str, str] = json.loads(request.body)    
+    reversed_dic: Dict[str, str] = {v: k for k, v in get_kr_name_dic().items()}
 
-    kr_name = json_obj['in_name']
-    code = reversed_dic[kr_name].split('-')
+    kr_name: str = json_obj['in_name']
+    code: List[str] = reversed_dic[kr_name].split('-')
 
-    currency = code[1]
-    unit_currency = code[0]
-    sell_balance = Decimal(json_obj['in_quantity'])
-    sell_price = Decimal(json_obj['in_price'])
-    sell_total = sell_balance * sell_price
+    currency: str = code[1]
+    unit_currency: str = code[0]
 
-    qs = Account.objects.filter(
+    sell_balance: Decimal = Decimal(json_obj['in_quantity'])
+    sell_price: Decimal = Decimal(json_obj['in_price'])
+    sell_total: Decimal = sell_balance * sell_price
+
+    qs: QuerySet[Account] = Account.objects.filter(
         currency=currency, 
         unit_currency=unit_currency
     )
 
-    ac_coin = qs.first()
-    cts = check_tick_size(sell_price)
-    message = ''
+    ac_coin: Optional[Account] = qs.first()
+    cts: Union[int, float] = check_tick_size(sell_price)
+    message: str = ''
 
     try:
         if Decimal(str(sell_price)) % Decimal(str(cts)) != 0:
@@ -147,8 +155,8 @@ def order_ask(request: HttpRequest) -> JsonResponse:
         elif sell_total < 5000:
             message = '최소 주문금액은 5000KRW입니다.'
         else:
-            sell_krw = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
-            sell_fee = sell_krw * Decimal(0.0005)
+            sell_krw: Decimal = (sell_price / ac_coin.avg_buy_price) * ac_coin.avg_buy_price * sell_balance
+            sell_fee: Decimal = sell_krw * Decimal(0.0005)
 
             if sell_balance < ac_coin.balance:
                 Account.objects.filter(id=ac_coin.id).update(
@@ -157,11 +165,12 @@ def order_ask(request: HttpRequest) -> JsonResponse:
             else:
                 Account.objects.get(id=ac_coin.id).delete()
 
-            krw_account = Account.objects.get(currency='KRW')
+            krw_account: Account = Account.objects.get(currency='KRW')
             Account.objects.filter(id=krw_account.id).update(balance=krw_account.balance + sell_krw - sell_fee)
+
             History.objects.create(
                 side = 'ask',
-                market = code[0] + '-' + code[1],
+                market = unit_currency + '-' + currency,
                 price = sell_price,
                 volume = sell_balance,
                 paid_fee = sell_fee
