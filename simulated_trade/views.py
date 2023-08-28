@@ -189,24 +189,25 @@ def order_ask(request: HttpRequest) -> JsonResponse:
 
 
 def get_history(request: HttpRequest, code: str) -> JsonResponse:
-    history = History.objects.filter(market=code)
+    history: History = History.objects.filter(market=code)
     response_data = []
-    
+    price: Union[str, int]
+
     for hs in history:
         if hs.side == 'bid':
             side = '매수'
         else:
             side = '매도'
 
-        cts_price = check_tick_size(hs.price)
+        cts_price: Union[int, float] = check_tick_size(hs.price)
 
         if cts_price < 1:
-            point = str(cts_price).split()[-1]    
+            point: str = str(cts_price).split()[-1]    
             price = f'{hs.price:.{len(point)}f}'
         else:
             price = int(hs.price)
 
-        volume = f'{hs.volume:.8f}'
+        volume: str = f'{hs.volume:.8f}'
 
         obj = {
             'side': side,
@@ -223,7 +224,7 @@ def get_history(request: HttpRequest, code: str) -> JsonResponse:
 
 
 def check_bookmark(request: HttpRequest, code: str) -> JsonResponse:
-    has_bookmark = Bookmark.objects.filter(market=code).exists()
+    has_bookmark: bool = Bookmark.objects.filter(market=code).exists()
 
     if not has_bookmark:
         Bookmark.objects.create(market=code)
