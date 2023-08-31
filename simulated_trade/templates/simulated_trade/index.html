@@ -449,9 +449,25 @@
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
 
-  <!-- Ticker JS-->
+  <!-- Ticker JS -->
   <script src="{% static 'simulated_trade/js/ticker.js' %}"></script>
 
+  <!-- Bookmark -->
+  <script>
+    setTimeout(() => {
+      const bookmarks = [{% for bm in bookmarks %}"{{ bm.market|safe }}", {% endfor %}];
+      
+      bookmarks.forEach(bm => {
+        const findId = document.getElementById(bm);
+        const bookmarkLink = findId.parentNode.querySelector('.bookmark-icon');
+        bookmarkLink.classList.toggle('bookmarked');
+      })
+  
+    }, 1200);
+  </script> 
+
+  <!-- Trade JS -->
+  <script src="{% static 'simulated_trade/js/trade.js' %}"></script>
 </body>
 
 </html>
