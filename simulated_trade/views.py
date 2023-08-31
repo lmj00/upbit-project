@@ -13,7 +13,10 @@ import json
 
 
 def index(request: HttpRequest):
-    return render(request, 'simulated_trade/index.html')
+    bookmarks: List[Dict[str, Union[int, str]]] = list(Bookmark.objects.all().values())
+    context = {'bookmarks': bookmarks}
+    
+    return render(request, 'simulated_trade/index.html', context=context)
 
 
 def check_tick_size(price: float) -> Union[int, float]:
